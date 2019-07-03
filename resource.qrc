@@ -1,6 +1,27 @@
 <RCC>
     <qresource prefix="/rec">
-        <file>img/BlueIn.png</file>
-        <file>img/RedIn.png</file>
+        <file>equipmentcreator.cpp</file>
+        <file>equipmentcreator.h</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
+        <file>img/create new.png</file>
+        <file>img/exit.png</file>
+        <file>img/open.png</file>
+        <file>img/save.png</file>
+        <file>img/add.png</file>
+        <file>img/create equip.png</file>
+        <file>img/edit.png</file>
+        <file>img/save as.png</file>
+        <file>img/cyan_in.png</file>
+        <file>img/cyan_out.png</file>
+        <file>img/green_in.png</file>
+        <file>img/green_out.png</file>
+        <file>img/yellow_in.png</file>
+        <file>img/yellow_out.png</file>
+        <file>img/blue_in.png</file>
+        <file>img/blue_out.png</file>
+        <file>img/red_in.png</file>
+        <file>img/red_out.png</file>
     </qresource>
 </RCC>

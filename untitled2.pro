@@ -25,17 +25,37 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        addequipment.cpp \
+        body.cpp \
+        changeequipment.cpp \
+        createproject.cpp \
+        equipment.cpp \
         equipmentcreator.cpp \
+        inputconnector.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        outputconnector.cpp \
+        selectpath.cpp
 
 HEADERS += \
+        addequipment.h \
+        body.h \
+        changeequipment.h \
+        createproject.h \
+        equipment.h \
         equipmentcreator.h \
-        mainwindow.h
+        inputconnector.h \
+        mainwindow.h \
+        outputconnector.h \
+        selectpath.h
 
 FORMS += \
+        addequipment.ui \
+        changeequipment.ui \
+        createproject.ui \
         equipmentcreator.ui \
-        mainwindow.ui
+        mainwindow.ui \
+        selectpath.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

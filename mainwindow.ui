@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
-    <height>440</height>
+    <width>752</width>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Редактор схем</string>
+   <string>Редактор сетевых схем</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -23,42 +23,19 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <widget class="QListWidget" name="listWidget">
-       <item>
-        <property name="text">
-         <string>Оборудование 1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Оборудование 2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Оборудование 3</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QListWidget" name="listWidget_2"/>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <spacer name="horizontalSpacer">
+     <widget class="QSplitter" name="splitter_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QListWidget" name="listWidget_2"/>
+       <widget class="QListWidget" name="listWidget"/>
+      </widget>
+      <widget class="QGraphicsView" name="graphicsView"/>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -67,7 +44,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>579</width>
+     <width>752</width>
      <height>21</height>
     </rect>
    </property>
@@ -75,21 +52,20 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_3"/>
+    <addaction name="create"/>
+    <addaction name="open"/>
     <addaction name="separator"/>
-    <addaction name="action_5"/>
-    <addaction name="action_6"/>
+    <addaction name="save"/>
     <addaction name="separator"/>
-    <addaction name="action_8"/>
+    <addaction name="close"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Оборудование</string>
     </property>
-    <addaction name="OpenEquipmentCreator"/>
-    <addaction name="action_10"/>
-    <addaction name="action_11"/>
+    <addaction name="open_equipment_creator"/>
+    <addaction name="add_equipment"/>
+    <addaction name="change_equipment"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -101,53 +77,85 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="create"/>
+   <addaction name="open"/>
+   <addaction name="save"/>
+   <addaction name="close"/>
+   <addaction name="open_equipment_creator"/>
+   <addaction name="add_equipment"/>
+   <addaction name="change_equipment"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action">
+  <action name="create">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/create new.png</normaloff>:/rec/img/create new.png</iconset>
+   </property>
    <property name="text">
     <string>Создать</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="open">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/open.png</normaloff>:/rec/img/open.png</iconset>
+   </property>
    <property name="text">
     <string>Открыть</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="save">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/save.png</normaloff>:/rec/img/save.png</iconset>
+   </property>
    <property name="text">
     <string>Сохранить</string>
    </property>
   </action>
-  <action name="action_6">
-   <property name="text">
-    <string>Сохранить как</string>
+  <action name="close">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/exit.png</normaloff>:/rec/img/exit.png</iconset>
    </property>
-  </action>
-  <action name="action_8">
    <property name="text">
     <string>Закрыть</string>
    </property>
   </action>
-  <action name="OpenEquipmentCreator">
+  <action name="open_equipment_creator">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/create equip.png</normaloff>:/rec/img/create equip.png</iconset>
    </property>
    <property name="text">
     <string>Создать</string>
    </property>
   </action>
-  <action name="action_10">
+  <action name="add_equipment">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/add.png</normaloff>:/rec/img/add.png</iconset>
+   </property>
    <property name="text">
     <string>Добавить</string>
    </property>
   </action>
-  <action name="action_11">
+  <action name="change_equipment">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/edit.png</normaloff>:/rec/img/edit.png</iconset>
+   </property>
    <property name="text">
     <string>Изменить</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
