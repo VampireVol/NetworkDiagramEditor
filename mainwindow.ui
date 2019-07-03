@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>579</width>
+    <height>440</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Редактор схем</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../Hearthstone/Hearthstone_Data/wait.cur</normaloff>../Hearthstone/Hearthstone_Data/wait.cur</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QListWidget" name="listWidget">
+       <item>
+        <property name="text">
+         <string>Оборудование 1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Оборудование 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Оборудование 3</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QListWidget" name="listWidget_2"/>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>579</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="action_3"/>
+    <addaction name="separator"/>
+    <addaction name="action_5"/>
+    <addaction name="action_6"/>
+    <addaction name="separator"/>
+    <addaction name="action_8"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Оборудование</string>
+    </property>
+    <addaction name="OpenEquipmentCreator"/>
+    <addaction name="action_10"/>
+    <addaction name="action_11"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="action">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="action_6">
+   <property name="text">
+    <string>Сохранить как</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>Закрыть</string>
+   </property>
+  </action>
+  <action name="OpenEquipmentCreator">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="action_10">
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+  </action>
+  <action name="action_11">
+   <property name="text">
+    <string>Изменить</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
