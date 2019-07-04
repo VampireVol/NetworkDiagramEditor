@@ -2,6 +2,7 @@
 #define EQUIPMENTCREATOR_H
 
 #include <QDialog>
+#include <equipment.h>
 
 namespace Ui {
 class EquipmentCreator;
@@ -14,7 +15,9 @@ class EquipmentCreator : public QDialog
 public:
     explicit EquipmentCreator(QWidget *parent = nullptr);
     ~EquipmentCreator();
-
+    Equipment* CreateEquipment();
+public:
+    Equipment *equipment = nullptr;
 private slots:
     void on_pushButtonCreate_clicked();
 
@@ -35,6 +38,8 @@ private slots:
     void on_listWidgetOut_itemDoubleClicked();
 
     void on_listWidgetEquipment_itemDoubleClicked();
+
+    void on_pushButtonExit_clicked();
 
 private:
     Ui::EquipmentCreator *ui;

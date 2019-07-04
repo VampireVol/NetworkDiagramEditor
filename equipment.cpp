@@ -1,11 +1,15 @@
 #include "equipment.h"
 
-Equipment::Equipment()
+//Equipment::Equipment()
+//{
+//    render = new EquipmentRender();
+//}
+Equipment::Equipment(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs)
 {
-    body = new Body();
+    render = new EquipmentRender(outputs, inputs);
 }
 
 Equipment::~Equipment()
 {
-    delete body;
+    delete render;
 }

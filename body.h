@@ -11,9 +11,11 @@
 class Body  : public QObject, public QGraphicsItem
 {
 public:
-    Body();
+    Body(int maxInputOrOutput);
     ~Body();
 private:
+    int maxInputOrOutput;
+    int height;
     QPointF m_shiftMouseCoords;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

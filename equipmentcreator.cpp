@@ -33,9 +33,6 @@ EquipmentCreator::EquipmentCreator(QWidget *parent) :
     ui->pushButtonAddOut->setEnabled(false);
     ui->pushButtonDelInOut->setEnabled(false);
     ui->pushButtonCreate->setEnabled(false);
-    //ui->listWidgetIn->setCurrentItem(itemRedIn);
-    //ui->listWidgetOut->setCurrentItem(itemRedOut);
-
 }
 
 EquipmentCreator::~EquipmentCreator()
@@ -43,9 +40,67 @@ EquipmentCreator::~EquipmentCreator()
     delete ui;
 }
 
+Equipment* EquipmentCreator::CreateEquipment()
+{
+    return equipment;
+}
+
 void EquipmentCreator::on_pushButtonCreate_clicked()
 {
 //записываем XML файл
+    QVector <OutputConnector*> outputs;
+    QVector <InputConnector*> inputs;
+    QString str;
+
+    while (QListWidgetItem *item = ui->listWidgetEquipment->takeItem(0))
+    {
+        str = item->text();
+        if(str == "Красный вход")
+        {
+            inputs.push_back(new InputConnectorRed());
+        }
+        else if (str == "Синий вход")
+        {
+            inputs.push_back(new InputConnectorBlue());
+        }
+        else if (str == "Зеленый вход")
+        {
+            inputs.push_back(new InputConnectorGreen());
+        }
+        else if (str == "Голубой вход")
+        {
+            inputs.push_back(new InputConnectorCyan());
+        }
+        else if (str == "Желтый вход")
+        {
+            inputs.push_back(new InputConnectorYellow());
+        }
+        else if (str == "Красный выход")
+        {
+            outputs.push_back(new OutputConnectorRed());
+        }
+        else if (str == "Синий выход")
+        {
+            outputs.push_back(new OutputConnectorBlue());
+        }
+        else if (str == "Зеленый выход")
+        {
+            outputs.push_back(new OutputConnectorGreen());
+        }
+        else if (str == "Голубой выход")
+        {
+            outputs.push_back(new OutputConnectorCyan());
+        }
+        else if (str == "Желтый выход")
+        {
+            outputs.push_back(new OutputConnectorYellow());
+        }
+    }
+    QString name = ui->lineEditName->text();
+    equipment = new Equipment(outputs, inputs);
+    equipment->setText(name);
+
+    close();
 }
 
 void EquipmentCreator::on_pushButtonAddIn_clicked()
@@ -104,4 +159,9 @@ void EquipmentCreator::on_listWidgetOut_itemDoubleClicked()
 void EquipmentCreator::on_listWidgetEquipment_itemDoubleClicked()
 {
     EquipmentCreator::on_pushButtonDelInOut_clicked();
+}
+
+void EquipmentCreator::on_pushButtonExit_clicked()
+{
+    EquipmentCreator::close();
 }

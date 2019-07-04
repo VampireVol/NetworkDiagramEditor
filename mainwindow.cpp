@@ -2,15 +2,23 @@
 #include "ui_mainwindow.h"
 #include "equipmentcreator.h"
 #include "addequipment.h"
-#include "changeequipment.h"
 #include "selectpath.h"
 #include "createproject.h"
+#include <QGraphicsScene>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->pushAddObj->setEnabled(false);
+    ui->pushDeleteObj->setEnabled(false);
+    ui->pushAddConn->setEnabled(false);
+    ui->pushDeleteConn->setEnabled(false);
+
+    scene = new QGraphicsScene();
+    ui->graphicsView->setScene(scene);
+
 }
 
 MainWindow::~MainWindow()
@@ -23,8 +31,7 @@ void MainWindow::on_create_triggered()
     ui->statusBar->showMessage("Создать новый проект");
     CreateProject *window = new CreateProject(this);
     window->show();
-    //numberOfEquipments = 0;
-    //equipments = new Equipment[numberOfEquipments];
+    //создаем файл xml
 }
 
 void MainWindow::on_open_triggered()
@@ -50,6 +57,8 @@ void MainWindow::on_open_equipment_creator_triggered()
     EquipmentCreator window;
     window.setModal(true);
     window.exec();
+    equipments.push_back(window.CreateEquipment());
+    ui->listWidget->addItem(equipments.last());
 }
 
 void MainWindow::on_add_equipment_triggered()
@@ -59,9 +68,35 @@ void MainWindow::on_add_equipment_triggered()
     window.exec();
 }
 
-void MainWindow::on_change_equipment_triggered()
+void MainWindow::on_listWidget_itemClicked()
 {
-    ChangeEquipment window;
-    window.setModal(true);
-    window.exec();
+    ui->pushAddObj->setEnabled(true);
+}
+
+void MainWindow::on_pushAddObj_clicked()
+{
+    //Добавление объекта на схему
+    int row = ui->listWidget->currentRow();
+    //Equipment *eq = new Equipment();
+    scene->addItem(equipments[row]->render->body);
+}
+
+void MainWindow::on_listWidget_itemDoubleClicked()
+{
+    MainWindow::on_pushAddObj_clicked();
+}
+
+void MainWindow::on_pushAddConn_clicked()
+{
+    //Добавление связи
+}
+
+void MainWindow::on_pushDeleteObj_clicked()
+{
+    //Удаление выделенного объекта и связи с другими объектами
+}
+
+void MainWindow::on_pushDeleteConn_clicked()
+{
+    //удаление выделенной связи
 }

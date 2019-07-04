@@ -11,6 +11,28 @@ OutputConnector::~OutputConnector()
 
 }
 
+Qt::GlobalColor OutputConnector::GetColor()
+{
+    return color;
+}
+
+QRectF OutputConnector::boundingRect() const
+{
+    return QRectF (0,0,20,20);
+}
+
+void OutputConnector::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QPen pen;
+    pen.setColor(Qt::black);
+    pen.setWidth(0);
+    painter->setPen(pen);
+    painter->setBrush(color);
+    painter->drawRect(0,0,20,20);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+}
+
 
 OutputConnectorRed::OutputConnectorRed()
     : OutputConnector (Qt::red)

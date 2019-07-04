@@ -23,5 +23,6 @@
         <file>img/blue_out.png</file>
         <file>img/red_in.png</file>
         <file>img/red_out.png</file>
+        <file>img/icon_application.png</file>
     </qresource>
 </RCC>

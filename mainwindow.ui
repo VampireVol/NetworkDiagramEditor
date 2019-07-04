@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>752</width>
-    <height>476</height>
+    <width>736</width>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,36 +15,127 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../Hearthstone/Hearthstone_Data/wait.cur</normaloff>../Hearthstone/Hearthstone_Data/wait.cur</iconset>
+    <normaloff>img/icon_application.png</normaloff>img/icon_application.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
     <enum>Qt::NoContextMenu</enum>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QSplitter" name="splitter_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QSplitter" name="splitter">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QListWidget" name="listWidget_2"/>
-       <widget class="QListWidget" name="listWidget"/>
-      </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>19</y>
+      <width>181</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QListWidget" name="listWidget"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>501</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
       <widget class="QGraphicsView" name="graphicsView"/>
-     </widget>
-    </item>
-   </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Оборудование&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>0</y>
+      <width>531</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Схема соединений&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushAddConn">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>250</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>добавить связь</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushAddObj">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>добавить объект</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushDeleteObj">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>удалить объект</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushDeleteConn">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>280</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>удалить связь</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>752</width>
+     <width>736</width>
      <height>21</height>
     </rect>
    </property>
@@ -65,7 +156,6 @@
     </property>
     <addaction name="open_equipment_creator"/>
     <addaction name="add_equipment"/>
-    <addaction name="change_equipment"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -83,7 +173,6 @@
    <addaction name="close"/>
    <addaction name="open_equipment_creator"/>
    <addaction name="add_equipment"/>
-   <addaction name="change_equipment"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="create">
@@ -92,7 +181,7 @@
      <normaloff>:/rec/img/create new.png</normaloff>:/rec/img/create new.png</iconset>
    </property>
    <property name="text">
-    <string>Создать</string>
+    <string>Создать проект</string>
    </property>
   </action>
   <action name="open">
@@ -101,7 +190,7 @@
      <normaloff>:/rec/img/open.png</normaloff>:/rec/img/open.png</iconset>
    </property>
    <property name="text">
-    <string>Открыть</string>
+    <string>Открыть проект</string>
    </property>
   </action>
   <action name="save">
@@ -119,7 +208,7 @@
      <normaloff>:/rec/img/exit.png</normaloff>:/rec/img/exit.png</iconset>
    </property>
    <property name="text">
-    <string>Закрыть</string>
+    <string>Выйти</string>
    </property>
   </action>
   <action name="open_equipment_creator">
@@ -131,7 +220,7 @@
      <normaloff>:/rec/img/create equip.png</normaloff>:/rec/img/create equip.png</iconset>
    </property>
    <property name="text">
-    <string>Создать</string>
+    <string>Создать оборудование</string>
    </property>
   </action>
   <action name="add_equipment">
@@ -140,16 +229,7 @@
      <normaloff>:/rec/img/add.png</normaloff>:/rec/img/add.png</iconset>
    </property>
    <property name="text">
-    <string>Добавить</string>
-   </property>
-  </action>
-  <action name="change_equipment">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/edit.png</normaloff>:/rec/img/edit.png</iconset>
-   </property>
-   <property name="text">
-    <string>Изменить</string>
+    <string>Добавить оборудование</string>
    </property>
   </action>
  </widget>

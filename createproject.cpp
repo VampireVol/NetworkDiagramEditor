@@ -15,3 +15,8 @@ CreateProject::~CreateProject()
 {
     delete ui;
 }
+
+void CreateProject::okClicked()
+{
+    //возвращаем путь к файлу
+}

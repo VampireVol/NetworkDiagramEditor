@@ -15,6 +15,9 @@ public:
     explicit CreateProject(QWidget *parent = nullptr);
     ~CreateProject();
 
+private slots:
+    void okClicked();
+
 private:
     Ui::CreateProject *ui;
 };

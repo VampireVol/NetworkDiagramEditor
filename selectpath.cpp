@@ -15,3 +15,8 @@ SelectPath::~SelectPath()
 {
     delete ui;
 }
+
+void SelectPath::okClicked()
+{
+    //Возвращаем путь к файлу xml
+}

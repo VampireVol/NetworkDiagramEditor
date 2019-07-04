@@ -27,10 +27,10 @@ CONFIG += c++11
 SOURCES += \
         addequipment.cpp \
         body.cpp \
-        changeequipment.cpp \
         createproject.cpp \
         equipment.cpp \
         equipmentcreator.cpp \
+        equipmentrender.cpp \
         inputconnector.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -40,10 +40,10 @@ SOURCES += \
 HEADERS += \
         addequipment.h \
         body.h \
-        changeequipment.h \
         createproject.h \
         equipment.h \
         equipmentcreator.h \
+        equipmentrender.h \
         inputconnector.h \
         mainwindow.h \
         outputconnector.h \
@@ -51,7 +51,6 @@ HEADERS += \
 
 FORMS += \
         addequipment.ui \
-        changeequipment.ui \
         createproject.ui \
         equipmentcreator.ui \
         mainwindow.ui \

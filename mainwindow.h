@@ -29,11 +29,23 @@ private slots:
 
     void on_add_equipment_triggered();
 
-    void on_change_equipment_triggered();
+    void on_listWidget_itemClicked();
+
+    void on_pushAddObj_clicked();
+
+    void on_listWidget_itemDoubleClicked();
+
+    void on_pushAddConn_clicked();
+
+    void on_pushDeleteObj_clicked();
+
+    void on_pushDeleteConn_clicked();
 
 private:
     Ui::MainWindow *ui;
-    Equipment *equipments;
+    QGraphicsScene *scene;
+    QVector <Equipment*> equipments;
+    QVector <Equipment*> equipmentsOnScene;
     unsigned long long numberOfEquipments;
 };
 

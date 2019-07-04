@@ -3,22 +3,19 @@
 
 #include<QVector>
 #include<QString>
-#include<body.h>
+#include<equipmentrender.h>
+#include <QListWidgetItem>
 
-//class Output;
-//class Input;
-
-class Equipment
+class Equipment : public QListWidgetItem
 {
 public:
-    Equipment();
+    //Equipment();
+    Equipment(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
     ~Equipment();
-    //QVector <Output>outputs;
-    //QVector <Input>inputs;
     QString name;
 
-private:
-    Body *body;
+
+    EquipmentRender *render;
 };
 
 #endif // EQUIPMENT_H

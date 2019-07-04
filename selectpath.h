@@ -15,6 +15,9 @@ public:
     explicit SelectPath(QWidget *parent = nullptr);
     ~SelectPath();
 
+ private slots:
+    void okClicked();
+
 private:
     Ui::SelectPath *ui;
 };

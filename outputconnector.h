@@ -1,17 +1,28 @@
 #ifndef OUTPUTCONNECTOR_H
 #define OUTPUTCONNECTOR_H
 
+#include <QObject>
+#include <QGraphicsItem>
 #include <QPainter>
+#include <QGraphicsSceneMouseEvent>
+#include <QDebug>
+#include <QCursor>
 
 class InputConnctor;
-class OutputConnector
+class OutputConnector : public QObject, public QGraphicsItem
 {
 public:
     OutputConnector(Qt::GlobalColor color);
     ~OutputConnector();
+    Qt::GlobalColor GetColor();
 private:
     Qt::GlobalColor color;
     InputConnctor *link;
+    /* Данные методы виртуальные, поэтому их необходимо реализовать
+     * в случае наследования от QGraphicsItem
+     * */
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 
 class OutputConnectorRed : public OutputConnector
