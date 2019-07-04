@@ -15,8 +15,15 @@ public:
     explicit CreateProject(QWidget *parent = nullptr);
     ~CreateProject();
 
+signals:
+    void projectName(const QString &str);
+
 private slots:
-    void okClicked();
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+    void on_nameProject_textChanged();
 
 private:
     Ui::CreateProject *ui;

@@ -13,7 +13,7 @@ public:
     Equipment(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
     ~Equipment();
     QString name;
-
+    int equipmentId;
 
     EquipmentRender *render;
 };

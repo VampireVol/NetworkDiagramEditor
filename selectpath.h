@@ -15,8 +15,15 @@ public:
     explicit SelectPath(QWidget *parent = nullptr);
     ~SelectPath();
 
- private slots:
-    void okClicked();
+signals:
+    void filePath(const QString &str);
+
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+    void on_path_textChanged();
 
 private:
     Ui::SelectPath *ui;

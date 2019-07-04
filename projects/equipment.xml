@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<equimpment>
+		<input>
+			<in_red count = “0”> </ in_red>
+			<in_darkblue count = “0”> </ in_darkblue>
+			<in_green count = “0”> </ in_green>
+			<in_blue count = “0”> </ in_blue>
+			<in_yellow count = “0”> </ in_yellow>
+		<output>
+			<out_red count = “0”> </ in_red>
+			<out_darkblue count = “0”> </ in_darkblue>
+			<out_green count = “0”> </ in_green>
+			<out_blue count = “0”> </ in_blue>
+			<out_yellow count = “0”> </ in_yellow>
+</equimpment>

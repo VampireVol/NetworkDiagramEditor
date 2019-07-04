@@ -23,6 +23,10 @@ private slots:
 
     void on_open_triggered();
 
+    void readFile(const QString &filePath);
+
+    void createProject(const QString &projectName);
+
     void on_save_triggered();
 
     void on_close_triggered();
@@ -35,8 +39,6 @@ private slots:
 
     void on_listWidget_itemDoubleClicked();
 
-    void on_pushAddConn_clicked();
-
     void on_pushDeleteObj_clicked();
 
     void on_pushDeleteConn_clicked();
@@ -46,7 +48,7 @@ private:
     QGraphicsScene *scene;
     QVector <Equipment*> equipments;
     QVector <Equipment*> equipmentsOnScene;
-    unsigned long long numberOfEquipments;
+    Equipment* CreateCopy(Equipment *equipment);
 };
 
 #endif // MAINWINDOW_H

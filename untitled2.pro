@@ -63,3 +63,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
+
+DISTFILES += \
+    projects/connections.xml \
+    projects/equipment.xml \
+    projects/Новый текстовый документ (2).txt \
+    projects/Новый текстовый документ.txt

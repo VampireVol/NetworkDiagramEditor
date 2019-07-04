@@ -15,6 +15,8 @@ public:
     OutputConnector(Qt::GlobalColor color);
     ~OutputConnector();
     Qt::GlobalColor GetColor();
+    int connetcorId;
+    int equipmentId;
 private:
     Qt::GlobalColor color;
     InputConnctor *link;

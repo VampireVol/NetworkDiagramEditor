@@ -100,7 +100,7 @@ void EquipmentCreator::on_pushButtonCreate_clicked()
     equipment = new Equipment(outputs, inputs);
     equipment->setText(name);
 
-    close();
+    EquipmentCreator::close();
 }
 
 void EquipmentCreator::on_pushButtonAddIn_clicked()
