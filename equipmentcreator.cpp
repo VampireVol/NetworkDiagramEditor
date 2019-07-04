@@ -42,7 +42,8 @@ EquipmentCreator::~EquipmentCreator()
 
 void EquipmentCreator::on_pushButtonCreate_clicked()
 {
-//записываем XML файл
+    //записываем XML файл
+    EquipmentCreator::close();
 }
 
 void EquipmentCreator::on_pushButtonAddIn_clicked()

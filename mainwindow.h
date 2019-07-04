@@ -23,6 +23,10 @@ private slots:
 
     void on_open_triggered();
 
+    void readFile(const QString &filePath);
+
+    void createProject(const QString &projectName);
+
     void on_save_triggered();
 
     void on_close_triggered();
@@ -35,16 +39,12 @@ private slots:
 
     void on_listWidget_itemDoubleClicked();
 
-    void on_pushAddConn_clicked();
-
     void on_pushDeleteObj_clicked();
 
     void on_pushDeleteConn_clicked();
 
 private:
     Ui::MainWindow *ui;
-    Equipment *equipments;
-    unsigned long long numberOfEquipments;
 };
 
 #endif // MAINWINDOW_H

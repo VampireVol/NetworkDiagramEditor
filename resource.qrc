@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/rec">
-        <file>equipmentcreator.cpp</file>
         <file>equipmentcreator.h</file>
         <file>main.cpp</file>
         <file>mainwindow.cpp</file>
@@ -24,5 +23,24 @@
         <file>img/red_in.png</file>
         <file>img/red_out.png</file>
         <file>img/icon_application.png</file>
+        <file>equipmentcreator.cpp</file>
+        <file>projects/connections.xml</file>
+        <file>projects/equipment.xml</file>
+        <file>projects/Новый текстовый документ (2).txt</file>
+        <file>projects/Новый текстовый документ.txt</file>
+        <file>addequipment.cpp</file>
+        <file>addequipment.h</file>
+        <file>body.cpp</file>
+        <file>body.h</file>
+        <file>createproject.cpp</file>
+        <file>createproject.h</file>
+        <file>equipment.cpp</file>
+        <file>equipment.h</file>
+        <file>inputconnector.cpp</file>
+        <file>inputconnector.h</file>
+        <file>outputconnector.cpp</file>
+        <file>outputconnector.h</file>
+        <file>selectpath.cpp</file>
+        <file>selectpath.h</file>
     </qresource>
 </RCC>
