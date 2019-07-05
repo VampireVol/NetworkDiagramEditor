@@ -48,6 +48,8 @@ private:
     QGraphicsScene *scene;
     QVector <Equipment*> equipments;
     QVector <Equipment*> equipmentsOnScene;
+    int nextEquipmentId = 1;
+    int nextConnectorId = 1;
     Equipment* CreateCopy(Equipment *equipment);
 };
 

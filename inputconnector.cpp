@@ -1,7 +1,7 @@
 #include "inputconnector.h"
 
 InputConnector::InputConnector(Qt::GlobalColor color)
-    : color(color) , link(nullptr)
+    : connectorId(0), equipmentId(0), color(color), link(nullptr)
 {
 
 }

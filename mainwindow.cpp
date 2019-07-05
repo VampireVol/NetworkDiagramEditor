@@ -137,7 +137,6 @@ Equipment* MainWindow::CreateCopy(Equipment *equipment)
     QVector <OutputConnector*> outputs;
     QVector <InputConnector*> inputs;
     QString name = equipment->text();
-    //тут можно поставить выдачу Id
     int outputSize = equipment->render->outputs.size();
     int inputSize = equipment->render->inputs.size();
     for(int i = 0; i < outputSize; ++i)
@@ -212,5 +211,6 @@ Equipment* MainWindow::CreateCopy(Equipment *equipment)
     }
     Equipment *copy = new Equipment(outputs, inputs);
     copy->setText(name);
+    copy->SetId(nextEquipmentId, nextConnectorId);
     return copy;
 }
