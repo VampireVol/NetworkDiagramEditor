@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "equipment.h"
+#include "fileorganizer.h"
+#include "projectname.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,10 +25,6 @@ private slots:
 
     void on_open_triggered();
 
-    void readFile(const QString &filePath);
-
-    void createProject(const QString &projectName);
-
     void on_save_triggered();
 
     void on_close_triggered();
@@ -43,8 +41,18 @@ private slots:
 
     void on_pushDeleteConn_clicked();
 
+    void on_delete_equipment_triggered();
+
 private:
     Ui::MainWindow *ui;
+    QGraphicsScene *scene;
+    QVector <Equipment*> equipmentsInProject;
+    QVector <Equipment*> equipmentsInLibrary;
+    QVector <Equipment*> equipmentsOnScene;
+    int nextEquipmentId;
+    int nextConnectorId;
+    Equipment* CreateCopy(Equipment *equipment);
+    FileOrganizer *fileOrganizer;
 };
 
 #endif // MAINWINDOW_H

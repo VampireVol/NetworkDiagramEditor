@@ -1,6 +1,7 @@
 #include "body.h"
 
-Body::Body()
+Body::Body(int maxInputOrOutput)
+    : maxInputOrOutput(maxInputOrOutput), height((2 * maxInputOrOutput + 1) * 20)
 {
 
 }
@@ -12,7 +13,7 @@ Body::~Body()
 
 QRectF Body::boundingRect() const
 {
-    return QRectF (0,0,80,180);
+    return QRectF (0,0,80,height);
 }
 
 void Body::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -22,7 +23,7 @@ void Body::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     pen.setWidth(2);
     painter->setPen(pen);
     painter->setBrush(Qt::white);
-    painter->drawRect(0,0,80,180);
+    painter->drawRect(0,0,80,height);
     Q_UNUSED(option);
     Q_UNUSED(widget);
 }

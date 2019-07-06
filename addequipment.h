@@ -2,6 +2,7 @@
 #define ADDEQUIPMENT_H
 
 #include <QDialog>
+#include "equipment.h"
 
 namespace Ui {
 class AddEquipment;
@@ -14,6 +15,9 @@ class AddEquipment : public QDialog
 public:
     explicit AddEquipment(QWidget *parent = nullptr);
     ~AddEquipment();
+
+    void loadEquipmentsFromLibrary(QVector <Equipment*> equipmentsInLibrary);
+    QVector<Equipment*> getAddedEquipments();
 
 private slots:
     void on_pushAdd_clicked();
@@ -30,8 +34,12 @@ private slots:
 
     void on_ListWidgetsAdded_itemDoubleClicked();
 
+    void on_pushOk_clicked();
+
 private:
     Ui::AddEquipment *ui;
+    QVector<Equipment*> equipmentsAdded;
+    QVector<Equipment*> equipmentsInLibrary;
 };
 
 #endif // ADDEQUIPMENT_H

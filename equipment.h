@@ -3,22 +3,23 @@
 
 #include<QVector>
 #include<QString>
-#include<body.h>
+#include<equipmentrender.h>
+#include <QListWidgetItem>
+#include <QLabel>
+#include <QGraphicsProxyWidget>
 
-//class Output;
-//class Input;
-
-class Equipment
+class Equipment : public QListWidgetItem
 {
 public:
-    Equipment();
+    //Equipment();
+    Equipment(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
     ~Equipment();
-    //QVector <Output>outputs;
-    //QVector <Input>inputs;
+    QLabel *labelId;
     QString name;
+    int equipmentId;
 
-private:
-    Body *body;
+    void SetId(int &nextEquipmentId, int &nextConnectorId);
+    EquipmentRender *render;
 };
 
 #endif // EQUIPMENT_H
