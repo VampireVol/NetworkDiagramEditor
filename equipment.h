@@ -17,9 +17,14 @@ public:
     QLabel *labelId;
     QString name;
     int equipmentId;
-
-    void SetId(int &nextEquipmentId, int &nextConnectorId);
     EquipmentRender *render;
+
+public:
+    void SetId(int &nextEquipmentId);
+
+public:
+    static Equipment* CreateCopy(Equipment *equipment);
+    static bool Contains(QVector <Equipment*> equipments, Equipment *equipment);
 };
 
 #endif // EQUIPMENT_H

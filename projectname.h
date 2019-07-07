@@ -26,6 +26,7 @@ private slots:
 
 private:
     Ui::ProjectName *ui;
+    bool projectName_isSelected;
 };
 
 #endif // SELECTPATH_H

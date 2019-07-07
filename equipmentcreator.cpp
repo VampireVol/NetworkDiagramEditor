@@ -104,7 +104,6 @@ void EquipmentCreator::on_pushButtonCreate_clicked()
     }
     QString name = ui->lineEditName->text();
     equipment = new Equipment(outputs, inputs);
-    equipment->setText(name);
     equipment->name = name;
 
     EquipmentCreator::close();
@@ -131,7 +130,7 @@ void EquipmentCreator::on_pushButtonAddOut_clicked()
 void EquipmentCreator::on_pushButtonDelInOut_clicked()
 {
     QListWidgetItem *item = ui->listWidgetEquipment->takeItem(ui->listWidgetEquipment->currentRow());
-        delete item;
+    delete item;
     if(ui->listWidgetEquipment->count() == 0)
     {
         ui->pushButtonDelInOut->setEnabled(false);

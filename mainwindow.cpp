@@ -16,12 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushDeleteObj->setEnabled(false);
     ui->pushDeleteConn->setEnabled(false);
     ui->open_equipment_creator->setEnabled(false);
-    ui->add_equipment->setEnabled(false);
+    ui->add_delete_equipment->setEnabled(false);
 
     scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
-    nextEquipmentId = 1;
-    nextConnectorId = 1;
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +30,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_create_triggered()
 {
     ui->statusBar->showMessage("Создать проект");
+    ui->pushAddObj->setEnabled(false);
     ProjectName window;
     window.setModal(true);
     window.exec();
@@ -39,16 +38,39 @@ void MainWindow::on_create_triggered()
     if(!projectName.isEmpty())
     {
         ui->open_equipment_creator->setEnabled(true);
-        ui->add_equipment->setEnabled(true);
-        //Перед этим надо бы удалить старый объект
+        ui->add_delete_equipment->setEnabled(true);
+        //.///////////////////////////////////////////////////////////////////////
         fileOrganizer = new FileOrganizer(projectName);
-        if(fileOrganizer->createProject())
+        switch(fileOrganizer->createProject())
+        {
+        case 0:
         {
             QMessageBox::information(this, "Успех", "Проект успешно создан:)");
+            equipmentsInProject.clear();
+            equipmentsInLibrary.clear();
+            equipmentsOnScene.clear();
+            nextEquipmentId = 1;
+            foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInLibrary())
+                equipmentsInLibrary.push_back(Equipment::CreateCopy(equipmet));
             ui->listWidget->clear();
+            scene->clear();
+            break;
         }
-        else {
-            QMessageBox::warning(this, "Ошибка", "Проект не создан:(");
+        case 1:
+        {
+            QMessageBox::warning(this, "Упс:(", "Проект не открыт");
+            break;
+        }
+        case 2:
+        {
+            QMessageBox::warning(this, "Упс:(", "Библиотека не открыта");
+            break;
+        }
+        default:
+        {
+            QMessageBox::warning(this, "Упс:(", "Неизвестная ошибка:(");
+            break;
+        }
         }
     }
 }
@@ -56,6 +78,7 @@ void MainWindow::on_create_triggered()
 void MainWindow::on_open_triggered()
 {
     ui->statusBar->showMessage("Открыть проект");
+    ui->pushAddObj->setEnabled(false);
     ProjectName window;
     window.setModal(true);
     window.exec();
@@ -63,35 +86,43 @@ void MainWindow::on_open_triggered()
     if(!projectName.isEmpty())
     {
         ui->open_equipment_creator->setEnabled(true);
-        ui->add_equipment->setEnabled(true);
-        //Перед этим надо бы удалить старый объект
+        ui->add_delete_equipment->setEnabled(true);
+        //.////////////////////////////////////////////////////////////////////////
         fileOrganizer = new FileOrganizer(projectName);
-        int check = fileOrganizer->openProject();
-        switch(check)
+        switch(fileOrganizer->openProject())
         {
         case 0:
         {
             QMessageBox::information(this, "Ура:)", "Проект успешно открыт");
             ui->listWidget->clear();
-            equipmentsInProject = fileOrganizer->getEquipmentsInProject();
-            equipmentsInLibrary = fileOrganizer->getEquipmentsInLibrary();
-            for(int i = 0; i < equipmentsInProject.size(); i++)
-                ui->listWidget->addItem(equipmentsInProject[i]);
+            equipmentsInProject.clear();
+            equipmentsInLibrary.clear();
+            equipmentsOnScene.clear();
+            scene->clear();
+            nextEquipmentId = 1;
+            foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInProject())
+            {
+                equipmentsInProject.push_back(Equipment::CreateCopy(equipmet));
+                equipmentsInProject.last()->setText(equipmentsInProject.last()->name);
+            }
+            foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInLibrary())
+                equipmentsInLibrary.push_back(Equipment::CreateCopy(equipmet));
+
+            if(!equipmentsInProject.isEmpty())
+            {
+                foreach(Equipment *equipment, equipmentsInProject)
+                    ui->listWidget->addItem(equipment);
+            }
             break;
         }
         case 1:
         {
-            QMessageBox::warning(this, "Упс:(", "Проект не найден");
+            QMessageBox::warning(this, "Упс:(", "Проект не открыт");
             break;
         }
         case 2:
         {
-            QMessageBox::warning(this, "Упс:(", "Ошибка при открытии файла xml");
-            break;
-        }
-        case 3:
-        {
-            QMessageBox::warning(this, "Упс:(", "Библиотека не найдена:(");
+            QMessageBox::warning(this, "Упс:(", "Библиотека не открыта");
             break;
         }
         default:
@@ -120,27 +151,41 @@ void MainWindow::on_open_equipment_creator_triggered()
     window.exec();
     if(window.CreateEquipment() != nullptr)
     {
-        equipmentsInProject.push_back(window.CreateEquipment());
-        equipmentsInProject.last()->SetId(nextEquipmentId, nextConnectorId);
+        while(Equipment::Contains(equipmentsInProject, window.CreateEquipment()) || Equipment::Contains(equipmentsInLibrary, window.CreateEquipment()))
+            window.CreateEquipment()->name += "1";
+        equipmentsInProject.push_back(Equipment::CreateCopy(window.CreateEquipment()));
+        equipmentsInLibrary.push_back(Equipment::CreateCopy(window.CreateEquipment()));
+        equipmentsInProject.last()->setText(equipmentsInProject.last()->name);
         ui->listWidget->addItem(equipmentsInProject.last());
-        fileOrganizer->createEquipment(equipmentsInProject.last());
+        fileOrganizer->addEquipment(equipmentsInProject.last());
     }
 }
 
-void MainWindow::on_add_equipment_triggered()
+void MainWindow::on_add_delete_equipment_triggered()
 {
     AddEquipment window;
-    window.loadEquipmentsFromLibrary(equipmentsInLibrary);
+    window.loadEquipments(equipmentsInLibrary, equipmentsInProject);
     window.setModal(true);
     window.exec();
-    if(!window.getAddedEquipments().isEmpty())
+    if(!window.reject_isClicked())
     {
-        foreach(Equipment *equipment, window.getAddedEquipments())
+        QVector <Equipment*> copyEquipments;
+        foreach(Equipment *equipment, equipmentsInProject)
+            copyEquipments.push_back(Equipment::CreateCopy(equipment));
+
+        equipmentsInProject.clear();
+        ui->listWidget->clear();
+        foreach(Equipment *equipment, window.getEquipmentsInProject())
         {
-            equipmentsInProject.push_back(equipment);
-            QString name = equipmentsInProject.last()->name;
-            equipmentsInProject.last()->setText(name);
-            ui->listWidget->addItem(equipmentsInProject.last());
+                equipmentsInProject.push_back(Equipment::CreateCopy(equipment));
+                equipmentsInProject.last()->setText(equipmentsInProject.last()->name);
+                ui->listWidget->addItem(equipmentsInProject.last());
+                fileOrganizer->addEquipment(equipmentsInProject.last());
+        }
+        foreach(Equipment *equipment, copyEquipments)
+        {
+            if(!Equipment::Contains(equipmentsInProject, equipment))
+                fileOrganizer->deleteEquipment(equipment->name);
         }
     }
 }
@@ -154,7 +199,15 @@ void MainWindow::on_pushAddObj_clicked()
 {
     //Добавление объекта на схему
     int row = ui->listWidget->currentRow();
-    Equipment *copy = CreateCopy(equipmentsInProject[row]);
+    Equipment *copy = Equipment::CreateCopy(equipmentsInProject[row]);
+    QString name = equipmentsInProject[row]->text();
+    copy->setText(name);
+    copy->SetId(nextEquipmentId);
+    QString text = QString("id: %1").arg(copy->equipmentId);
+    copy->labelId = new QLabel(text);
+    QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(copy->render->body);
+    //тут можно поиграться с отображением
+    proxyWidget->setWidget(copy->labelId);
     equipmentsOnScene.push_back(copy);
     scene->addItem(copy->render->body);
 }
@@ -173,103 +226,6 @@ void MainWindow::on_pushDeleteObj_clicked()
 void MainWindow::on_pushDeleteConn_clicked()
 {
     //удаление выделенной связи
-}
-
-Equipment* MainWindow::CreateCopy(Equipment *equipment)
-{
-    QVector <OutputConnector*> outputs;
-    QVector <InputConnector*> inputs;
-    QString name = equipment->text();
-    int outputSize = equipment->render->outputs.size();
-    int inputSize = equipment->render->inputs.size();
-    for(int i = 0; i < outputSize; ++i)
-    {
-        Qt::GlobalColor color = equipment->render->outputs[i]->GetColor();
-        switch (color)
-        {
-        case Qt::red:
-        {
-            outputs.push_back(new OutputConnectorRed());
-            break;
-        }
-        case Qt::blue:
-        {
-            outputs.push_back(new OutputConnectorBlue());
-            break;
-        }
-        case Qt::green:
-        {
-            outputs.push_back(new OutputConnectorGreen());
-            break;
-        }
-        case Qt::cyan:
-        {
-            outputs.push_back(new OutputConnectorCyan());
-            break;
-        }
-        case Qt::yellow:
-        {
-            outputs.push_back(new OutputConnectorYellow());
-            break;
-        }
-        default:
-            //сюда надо воткнуть месседжбокс который говорит, что что-то пошло не так
-            break;
-        }
-    }
-    for(int i = 0; i < inputSize; ++i)
-    {
-        Qt::GlobalColor color = equipment->render->inputs[i]->GetColor();
-        switch (color)
-        {
-        case Qt::red:
-        {
-            inputs.push_back(new InputConnectorRed());
-            break;
-        }
-        case Qt::blue:
-        {
-            inputs.push_back(new InputConnectorBlue());
-            break;
-        }
-        case Qt::green:
-        {
-            inputs.push_back(new InputConnectorGreen());
-            break;
-        }
-        case Qt::cyan:
-        {
-            inputs.push_back(new InputConnectorCyan());
-            break;
-        }
-        case Qt::yellow:
-        {
-            inputs.push_back(new InputConnectorYellow());
-            break;
-        }
-        default:
-            //сюда надо воткнуть месседжбокс который говорит, что что-то пошло не так
-            break;
-        }
-    }
-    Equipment *copy = new Equipment(outputs, inputs);
-    copy->setText(name);
-    QString text = QString("id: %1").arg(equipment->equipmentId);
-    copy->labelId = new QLabel(text);
-    QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(copy->render->body);
-    //тут можно поиграться с отображением
-    proxyWidget->setWidget(copy->labelId);
-
-    for(int i = 0; i < inputSize; ++i)
-    {
-        copy->render->inputs[i]->connectorId = equipment->render->inputs[i]->connectorId;
-    }
-    for(int i = 0; i < outputSize; ++i)
-    {
-        copy->render->outputs[i]->connectorId = equipment->render->outputs[i]->connectorId;
-    }
-
-    return copy;
 }
 
 void MainWindow::on_delete_equipment_triggered()

@@ -16,30 +16,34 @@ public:
     explicit AddEquipment(QWidget *parent = nullptr);
     ~AddEquipment();
 
-    void loadEquipmentsFromLibrary(QVector <Equipment*> equipmentsInLibrary);
-    QVector<Equipment*> getAddedEquipments();
+    void loadEquipments(QVector <Equipment*> equipmentsInLibrary, QVector<Equipment*> equipmentsInProject);
+    QVector<Equipment*> getEquipmentsInProject();
 
-private slots:
+public:
+    bool reject_isClicked();
+
+private slots: 
     void on_pushAdd_clicked();
 
-    void on_pushExit_clicked();
+    void on_pushReject_clicked();
 
     void on_pushDelete_clicked();
 
-    void on_ListWidgetsAvailable_itemClicked();
+    void on_ListWidgetsLibrary_itemClicked();
 
-    void on_ListWidgetsAvailable_itemDoubleClicked();
+    void on_ListWidgetsLibrary_itemDoubleClicked();
 
-    void on_ListWidgetsAdded_itemClicked();
+    void on_ListWidgetsProject_itemClicked();
 
-    void on_ListWidgetsAdded_itemDoubleClicked();
+    void on_ListWidgetsProject_itemDoubleClicked();
 
     void on_pushOk_clicked();
 
 private:
     Ui::AddEquipment *ui;
-    QVector<Equipment*> equipmentsAdded;
+    QVector<Equipment*> equipmentsInProject;
     QVector<Equipment*> equipmentsInLibrary;
+    bool reject;
 };
 
 #endif // ADDEQUIPMENT_H

@@ -29,7 +29,7 @@ private slots:
 
     void on_close_triggered();
 
-    void on_add_equipment_triggered();
+    void on_add_delete_equipment_triggered();
 
     void on_listWidget_itemClicked();
 
@@ -50,8 +50,7 @@ private:
     QVector <Equipment*> equipmentsInLibrary;
     QVector <Equipment*> equipmentsOnScene;
     int nextEquipmentId;
-    int nextConnectorId;
-    Equipment* CreateCopy(Equipment *equipment);
+    //Equipment* CreateCopy(Equipment *equipment);
     FileOrganizer *fileOrganizer;
 };
 

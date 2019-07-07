@@ -11,6 +11,7 @@ ProjectName::ProjectName(QWidget *parent) :
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     QRegExp exp("[a-zA-Z]{1,9}[1-9]{0,2}");
     ui->projectName->setValidator(new QRegExpValidator(exp, this));
+    projectName_isSelected = false;
 }
 
 ProjectName::~ProjectName()
@@ -21,12 +22,16 @@ ProjectName::~ProjectName()
 
 void ProjectName::on_buttonBox_accepted()
 {
+    projectName_isSelected = true;
     ProjectName::close();
 }
 
 QString ProjectName::projectName()
 {
-    return ui->projectName->text();
+    if(projectName_isSelected)
+        return ui->projectName->text();
+    else
+        return nullptr;
 }
 
 void ProjectName::on_buttonBox_rejected()

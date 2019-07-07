@@ -134,8 +134,7 @@
      <string>Оборудование</string>
     </property>
     <addaction name="open_equipment_creator"/>
-    <addaction name="add_equipment"/>
-    <addaction name="delete_equipment"/>
+    <addaction name="add_delete_equipment"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -151,7 +150,7 @@
    <addaction name="open"/>
    <addaction name="save"/>
    <addaction name="open_equipment_creator"/>
-   <addaction name="add_equipment"/>
+   <addaction name="add_delete_equipment"/>
    <addaction name="close"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -203,13 +202,13 @@
     <string>Создать оборудование</string>
    </property>
   </action>
-  <action name="add_equipment">
+  <action name="add_delete_equipment">
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/img/add.png</normaloff>:/img/add.png</iconset>
    </property>
    <property name="text">
-    <string>Добавить оборудование</string>
+    <string>Добавить/Удалить оборудование</string>
    </property>
   </action>
   <action name="delete_equipment">

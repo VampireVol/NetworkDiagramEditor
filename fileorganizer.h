@@ -2,16 +2,18 @@
 #define FILEORGANIZER_H
 
 #include "equipment.h"
+#include "QDir"
+#include "QFile"
 
-class FileOrganizer
+class FileOrganizer : public QDir
 {
 public:
     FileOrganizer(const QString &projectName);
-    bool createProject();
+    int createProject();
     int openProject();
-    bool addEquipments();
-    bool deleteEquipments();
-    void createEquipment(Equipment *equipment);
+    //bool addEquipments();
+    void deleteEquipment(QString name);
+    void addEquipment(Equipment *equipment);
     QVector <Equipment*> getEquipmentsInProject();
     QVector <Equipment*> getEquipmentsInLibrary();
 
@@ -19,7 +21,7 @@ private:
     int openLibrary();
 
 private:
-    const QString mainPath;
+    QString mainPath;
     QString projectName;
     QString projectPath;
     QVector <Equipment*> equipmentsInProject;
