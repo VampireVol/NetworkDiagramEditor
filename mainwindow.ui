@@ -127,6 +127,7 @@
     <addaction name="separator"/>
     <addaction name="save"/>
     <addaction name="separator"/>
+    <addaction name="save_as"/>
     <addaction name="close"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -149,6 +150,7 @@
    <addaction name="create"/>
    <addaction name="open"/>
    <addaction name="save"/>
+   <addaction name="save_as"/>
    <addaction name="open_equipment_creator"/>
    <addaction name="add_delete_equipment"/>
    <addaction name="close"/>
@@ -214,6 +216,15 @@
   <action name="delete_equipment">
    <property name="text">
     <string>Удалить оборудование</string>
+   </property>
+  </action>
+  <action name="save_as">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/img/save as.png</normaloff>:/img/save as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить как</string>
    </property>
   </action>
  </widget>

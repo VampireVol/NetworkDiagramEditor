@@ -43,6 +43,8 @@ private slots:
 
     void on_delete_equipment_triggered();
 
+    void on_save_as_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
@@ -52,6 +54,7 @@ private:
     int nextEquipmentId;
     //Equipment* CreateCopy(Equipment *equipment);
     FileOrganizer *fileOrganizer;
+    QString mainPath;
 };
 
 #endif // MAINWINDOW_H

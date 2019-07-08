@@ -35,7 +35,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         outputconnector.cpp \
-        projectname.cpp
+        projectname.cpp \
+        selectpath.cpp
 
 HEADERS += \
         addequipment.h \
@@ -47,13 +48,15 @@ HEADERS += \
         inputconnector.h \
         mainwindow.h \
         outputconnector.h \
-        projectname.h
+        projectname.h \
+        selectpath.h
 
 FORMS += \
         addequipment.ui \
         equipmentcreator.ui \
         mainwindow.ui \
-        projectname.ui
+        projectname.ui \
+        selectpath.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

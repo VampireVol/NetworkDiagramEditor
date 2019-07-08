@@ -3,7 +3,7 @@
 #include "equipmentcreator.h"
 #include "addequipment.h"
 #include "projectname.h"
-#include "fileorganizer.h"
+#include "selectpath.h"
 #include <QGraphicsScene>
 #include "QMessageBox"
 
@@ -17,9 +17,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushDeleteConn->setEnabled(false);
     ui->open_equipment_creator->setEnabled(false);
     ui->add_delete_equipment->setEnabled(false);
+    ui->save->setEnabled(false);
+    ui->save_as->setEnabled(false);
 
     scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
+    mainPath = FileOrganizer::currentPath();//"V:/study/QtProjects/build-DiagramNetworkEditor-Desktop_Qt_5_13_0_MSVC2017_64bit-Release";
 }
 
 MainWindow::~MainWindow()
@@ -37,15 +40,15 @@ void MainWindow::on_create_triggered()
     QString projectName = window.projectName();
     if(!projectName.isEmpty())
     {
-        ui->open_equipment_creator->setEnabled(true);
-        ui->add_delete_equipment->setEnabled(true);
         //.///////////////////////////////////////////////////////////////////////
-        fileOrganizer = new FileOrganizer(projectName);
-        switch(fileOrganizer->createProject())
-        {
-        case 0:
+        fileOrganizer = new FileOrganizer(projectName, mainPath);
+        if(fileOrganizer->createProject())
         {
             QMessageBox::information(this, "Успех", "Проект успешно создан:)");
+            ui->save->setEnabled(true);
+            ui->save_as->setEnabled(true);
+            ui->open_equipment_creator->setEnabled(true);
+            ui->add_delete_equipment->setEnabled(true);
             equipmentsInProject.clear();
             equipmentsInLibrary.clear();
             equipmentsOnScene.clear();
@@ -54,23 +57,10 @@ void MainWindow::on_create_triggered()
                 equipmentsInLibrary.push_back(Equipment::CreateCopy(equipmet));
             ui->listWidget->clear();
             scene->clear();
-            break;
         }
-        case 1:
+        else
         {
-            QMessageBox::warning(this, "Упс:(", "Проект не открыт");
-            break;
-        }
-        case 2:
-        {
-            QMessageBox::warning(this, "Упс:(", "Библиотека не открыта");
-            break;
-        }
-        default:
-        {
-            QMessageBox::warning(this, "Упс:(", "Неизвестная ошибка:(");
-            break;
-        }
+            QMessageBox::warning(this, "Упс:(", "Проект не удалось создать");
         }
     }
 }
@@ -85,15 +75,17 @@ void MainWindow::on_open_triggered()
     QString projectName = window.projectName();
     if(!projectName.isEmpty())
     {
-        ui->open_equipment_creator->setEnabled(true);
-        ui->add_delete_equipment->setEnabled(true);
         //.////////////////////////////////////////////////////////////////////////
-        fileOrganizer = new FileOrganizer(projectName);
+        fileOrganizer = new FileOrganizer(projectName, mainPath);
         switch(fileOrganizer->openProject())
         {
         case 0:
         {
             QMessageBox::information(this, "Ура:)", "Проект успешно открыт");
+            ui->save->setEnabled(true);
+            ui->save_as->setEnabled(true);
+            ui->open_equipment_creator->setEnabled(true);
+            ui->add_delete_equipment->setEnabled(true);
             ui->listWidget->clear();
             equipmentsInProject.clear();
             equipmentsInLibrary.clear();
@@ -107,22 +99,49 @@ void MainWindow::on_open_triggered()
             }
             foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInLibrary())
                 equipmentsInLibrary.push_back(Equipment::CreateCopy(equipmet));
+            foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInScheme())
+                equipmentsOnScene.push_back(Equipment::CreateCopy(equipmet));
 
             if(!equipmentsInProject.isEmpty())
             {
                 foreach(Equipment *equipment, equipmentsInProject)
                     ui->listWidget->addItem(equipment);
             }
+            if(!equipmentsOnScene.isEmpty())
+            {
+                foreach(Equipment *equipment, equipmentsOnScene)
+                {
+                    //equipment->setText(equipment->name);
+                    QString text = QString("id: %1").arg(equipment->equipmentId);
+                    equipment->labelId = new QLabel(text);
+                    QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(equipment->render->body);
+                    //тут можно поиграться с отображением
+                    proxyWidget->setWidget(equipment->labelId);
+                    equipmentsOnScene.push_back(equipment);
+                    scene->addItem(equipment->render->body);
+                }
+                nextEquipmentId = equipmentsOnScene.last()->equipmentId + 1;
+            }
             break;
         }
         case 1:
         {
-            QMessageBox::warning(this, "Упс:(", "Проект не открыт");
+            QMessageBox::warning(this, "Упс:(", "Проект не найден");
             break;
         }
         case 2:
         {
-            QMessageBox::warning(this, "Упс:(", "Библиотека не открыта");
+            QMessageBox::warning(this, "Упс:(", "Оборудование не удалось загрузить");
+            break;
+        }
+        case 3:
+        {
+            QMessageBox::warning(this, "Упс:(", "Библиотеку не удалось загрузить");
+            break;
+        }
+        case 4:
+        {
+            QMessageBox::warning(this, "Упс:(", "Схему не удалось загрузить");
             break;
         }
         default:
@@ -136,6 +155,10 @@ void MainWindow::on_open_triggered()
 
 void MainWindow::on_save_triggered()
 {
+    if(fileOrganizer->saveScheme(equipmentsOnScene))
+        QMessageBox::information(this, "Сохранение", "Схема сохранена");
+    else
+        QMessageBox::warning(this, "Сохранение", "Схему не удалось сохранить");
     ui->statusBar->showMessage("Сохранить");
 }
 
@@ -151,8 +174,10 @@ void MainWindow::on_open_equipment_creator_triggered()
     window.exec();
     if(window.CreateEquipment() != nullptr)
     {
+        int counter = 0;
+        QString name = window.CreateEquipment()->name;
         while(Equipment::Contains(equipmentsInProject, window.CreateEquipment()) || Equipment::Contains(equipmentsInLibrary, window.CreateEquipment()))
-            window.CreateEquipment()->name += "1";
+            window.CreateEquipment()->name = name + QString::number(++counter);
         equipmentsInProject.push_back(Equipment::CreateCopy(window.CreateEquipment()));
         equipmentsInLibrary.push_back(Equipment::CreateCopy(window.CreateEquipment()));
         equipmentsInProject.last()->setText(equipmentsInProject.last()->name);
@@ -200,8 +225,7 @@ void MainWindow::on_pushAddObj_clicked()
     //Добавление объекта на схему
     int row = ui->listWidget->currentRow();
     Equipment *copy = Equipment::CreateCopy(equipmentsInProject[row]);
-    QString name = equipmentsInProject[row]->text();
-    copy->setText(name);
+    //copy->setText(copy->name);
     copy->SetId(nextEquipmentId);
     QString text = QString("id: %1").arg(copy->equipmentId);
     copy->labelId = new QLabel(text);
@@ -229,6 +253,11 @@ void MainWindow::on_pushDeleteConn_clicked()
 }
 
 void MainWindow::on_delete_equipment_triggered()
+{
+
+}
+
+void MainWindow::on_save_as_triggered()
 {
 
 }

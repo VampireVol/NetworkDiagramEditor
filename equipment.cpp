@@ -112,14 +112,17 @@ Equipment* Equipment::CreateCopy(Equipment *equipment)
     }
     Equipment *copy = new Equipment(outputs, inputs);
     copy->name = equipment->name;
+    copy->equipmentId = equipment->equipmentId;
 
     for(int i = 0; i < inputSize; ++i)
     {
         copy->render->inputs[i]->connectorId = equipment->render->inputs[i]->connectorId;
+        copy->render->inputs[i]->equipmentId = copy->equipmentId;
     }
     for(int i = 0; i < outputSize; ++i)
     {
         copy->render->outputs[i]->connectorId = equipment->render->outputs[i]->connectorId;
+        copy->render->outputs[i]->equipmentId = copy->equipmentId;
     }
 
     return copy;
