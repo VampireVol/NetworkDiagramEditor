@@ -9,11 +9,7 @@
 class EquipmentRender
 {
 public:
-<<<<<<< HEAD
-    EquipmentRender(QVector <OutputConnector*> outputs, QVector <InputConnector*> input);
-=======
     EquipmentRender(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
->>>>>>> Network/master
 
     Body *body;
     QVector <OutputConnector*> outputs;

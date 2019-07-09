@@ -6,13 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-<<<<<<< HEAD
-    <width>742</width>
-    <height>466</height>
-=======
     <width>719</width>
     <height>454</height>
->>>>>>> Network/master
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
-<<<<<<< HEAD
-    <normaloff>:/rec/img/icon_application.png</normaloff>:/rec/img/icon_application.png</iconset>
-=======
     <normaloff>:/img/icon_application.png</normaloff>:/img/icon_application.png</iconset>
->>>>>>> Network/master
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
@@ -123,11 +114,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-<<<<<<< HEAD
-     <width>742</width>
-=======
      <width>719</width>
->>>>>>> Network/master
      <height>21</height>
     </rect>
    </property>
@@ -163,14 +150,9 @@
    <addaction name="create"/>
    <addaction name="open"/>
    <addaction name="save"/>
-<<<<<<< HEAD
-   <addaction name="open_equipment_creator"/>
-   <addaction name="add_equipment"/>
-=======
    <addaction name="save_as"/>
    <addaction name="open_equipment_creator"/>
    <addaction name="add_delete_equipment"/>
->>>>>>> Network/master
    <addaction name="close"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

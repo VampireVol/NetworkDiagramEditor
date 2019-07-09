@@ -4,15 +4,7 @@
 #include "addequipment.h"
 #include "projectname.h"
 #include "selectpath.h"
-<<<<<<< HEAD
-#include "createproject.h"
 #include <QGraphicsScene>
-#include "QFile"
-#include "QDir"
-#include "QTextStream"
-=======
-#include <QGraphicsScene>
->>>>>>> Network/master
 #include "QMessageBox"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -23,11 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushAddObj->setEnabled(false);
     ui->pushDeleteObj->setEnabled(false);
     ui->pushDeleteConn->setEnabled(false);
-<<<<<<< HEAD
-
-    scene = new QGraphicsScene();
-    ui->graphicsView->setScene(scene);
-=======
     ui->open_equipment_creator->setEnabled(false);
     ui->add_delete_equipment->setEnabled(false);
     ui->save->setEnabled(false);
@@ -36,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
     mainPath = FileOrganizer::currentPath();//"V:/study/QtProjects/build-DiagramNetworkEditor-Desktop_Qt_5_13_0_MSVC2017_64bit-Release";
->>>>>>> Network/master
 }
 
 MainWindow::~MainWindow()
@@ -46,13 +32,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_create_triggered()
 {
-<<<<<<< HEAD
-    ui->statusBar->showMessage("Создать новый проект");
-    CreateProject *window = new CreateProject(this);
-    window->show();
-    connect(window, SIGNAL(projectName(QString)), this, SLOT(createProject(QString)));
-    //создаем файл xml
-=======
     ui->statusBar->showMessage("Создать проект");
     ui->pushAddObj->setEnabled(false);
     ProjectName window;
@@ -84,49 +63,11 @@ void MainWindow::on_create_triggered()
             QMessageBox::warning(this, "Упс:(", "Проект не удалось создать");
         }
     }
->>>>>>> Network/master
 }
 
 void MainWindow::on_open_triggered()
 {
     ui->statusBar->showMessage("Открыть проект");
-<<<<<<< HEAD
-    SelectPath *window = new SelectPath(this);
-    window->show();
-    connect(window, SIGNAL(filePath(QString)), this, SLOT(readFile(QString)));
-}
-
-void MainWindow::readFile(const QString &filePath)
-{
-    //Считываем инфу из файла существующего проекта
-    QFile file(filePath);
-
-    if(!file.open(QFile::ReadOnly | QFile::Text))
-    {
-        QMessageBox::warning(this, "Error", "Не корректный путь");
-        return;
-    }
-
-    QTextStream stream(&file);
-    QString buffer = stream.readAll();
-    //ui->textEdit->setText(buffer);
-    file.flush();
-    file.close();
-}
-
-void MainWindow::createProject(const QString &projectName)
-{
-    //Создаем директорию нового проекта
-    QDir dir("V:/study/My projects/practics/NetworkDiagramEditor-master/projects");
-    if(!dir.exists())
-    {
-        QMessageBox::warning(this, "Error", "Не найдена директория");
-        return;
-    }
-    dir.mkdir(projectName);
-
-    //...
-=======
     ui->pushAddObj->setEnabled(false);
     ProjectName window;
     window.setModal(true);
@@ -210,7 +151,6 @@ void MainWindow::createProject(const QString &projectName)
         }
         }
     }
->>>>>>> Network/master
 }
 
 void MainWindow::on_save_triggered()
@@ -232,10 +172,6 @@ void MainWindow::on_open_equipment_creator_triggered()
     EquipmentCreator window;
     window.setModal(true);
     window.exec();
-<<<<<<< HEAD
-    equipments.push_back(window.CreateEquipment());
-    ui->listWidget->addItem(equipments.last());
-=======
     if(window.CreateEquipment() != nullptr)
     {
         int counter = 0;
@@ -248,15 +184,10 @@ void MainWindow::on_open_equipment_creator_triggered()
         ui->listWidget->addItem(equipmentsInProject.last());
         fileOrganizer->addEquipment(equipmentsInProject.last());
     }
->>>>>>> Network/master
 }
 
 void MainWindow::on_add_delete_equipment_triggered()
 {
-<<<<<<< HEAD
-    AddEquipment *window = new AddEquipment(this);
-    window->show();
-=======
     AddEquipment window;
     window.loadEquipments(equipmentsInLibrary, equipmentsInProject);
     window.setModal(true);
@@ -282,7 +213,6 @@ void MainWindow::on_add_delete_equipment_triggered()
                 fileOrganizer->deleteEquipment(equipment->name);
         }
     }
->>>>>>> Network/master
 }
 
 void MainWindow::on_listWidget_itemClicked()
@@ -294,9 +224,6 @@ void MainWindow::on_pushAddObj_clicked()
 {
     //Добавление объекта на схему
     int row = ui->listWidget->currentRow();
-<<<<<<< HEAD
-    Equipment *copy = CreateCopy(equipments[row]);
-=======
     Equipment *copy = Equipment::CreateCopy(equipmentsInProject[row]);
     //copy->setText(copy->name);
     copy->SetId(nextEquipmentId);
@@ -305,7 +232,6 @@ void MainWindow::on_pushAddObj_clicked()
     QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(copy->render->body);
     //тут можно поиграться с отображением
     proxyWidget->setWidget(copy->labelId);
->>>>>>> Network/master
     equipmentsOnScene.push_back(copy);
     scene->addItem(copy->render->body);
 }
@@ -326,89 +252,6 @@ void MainWindow::on_pushDeleteConn_clicked()
     //удаление выделенной связи
 }
 
-<<<<<<< HEAD
-Equipment* MainWindow::CreateCopy(Equipment *equipment)
-{
-    QVector <OutputConnector*> outputs;
-    QVector <InputConnector*> inputs;
-    QString name = equipment->text();
-    int outputSize = equipment->render->outputs.size();
-    int inputSize = equipment->render->inputs.size();
-    for(int i = 0; i < outputSize; ++i)
-    {
-        Qt::GlobalColor color = equipment->render->outputs[i]->GetColor();
-        switch (color)
-        {
-        case Qt::red:
-        {
-            outputs.push_back(new OutputConnectorRed());
-            break;
-        }
-        case Qt::blue:
-        {
-            outputs.push_back(new OutputConnectorBlue());
-            break;
-        }
-        case Qt::green:
-        {
-            outputs.push_back(new OutputConnectorGreen());
-            break;
-        }
-        case Qt::cyan:
-        {
-            outputs.push_back(new OutputConnectorCyan());
-            break;
-        }
-        case Qt::yellow:
-        {
-            outputs.push_back(new OutputConnectorYellow());
-            break;
-        }
-        default:
-            //сюда надо воткнуть месседжбокс который говорит, что что-то пошло не так
-            break;
-        }
-    }
-    for(int i = 0; i < inputSize; ++i)
-    {
-        Qt::GlobalColor color = equipment->render->inputs[i]->GetColor();
-        switch (color)
-        {
-        case Qt::red:
-        {
-            inputs.push_back(new InputConnectorRed());
-            break;
-        }
-        case Qt::blue:
-        {
-            inputs.push_back(new InputConnectorBlue());
-            break;
-        }
-        case Qt::green:
-        {
-            inputs.push_back(new InputConnectorGreen());
-            break;
-        }
-        case Qt::cyan:
-        {
-            inputs.push_back(new InputConnectorCyan());
-            break;
-        }
-        case Qt::yellow:
-        {
-            inputs.push_back(new InputConnectorYellow());
-            break;
-        }
-        default:
-            //сюда надо воткнуть месседжбокс который говорит, что что-то пошло не так
-            break;
-        }
-    }
-    Equipment *copy = new Equipment(outputs, inputs);
-    copy->setText(name);
-    copy->SetId(nextEquipmentId, nextConnectorId);
-    return copy;
-=======
 void MainWindow::on_delete_equipment_triggered()
 {
 
@@ -417,5 +260,4 @@ void MainWindow::on_delete_equipment_triggered()
 void MainWindow::on_save_as_triggered()
 {
 
->>>>>>> Network/master
 }

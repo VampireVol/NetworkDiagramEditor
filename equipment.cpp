@@ -15,14 +15,9 @@ Equipment::~Equipment()
     delete render;
 }
 
-<<<<<<< HEAD
-void Equipment::SetId(int &nextEquipmentId, int &nextConnectorId)
-{
-=======
 void Equipment::SetId(int &nextEquipmentId)
 {
     int nextConnectorId = 1;
->>>>>>> Network/master
     equipmentId = nextEquipmentId++;
     int outputSize = render->outputs.size();
     int inputSize = render->inputs.size();
@@ -36,13 +31,6 @@ void Equipment::SetId(int &nextEquipmentId)
         render->outputs[i]->equipmentId = equipmentId;
         render->outputs[i]->connectorId = nextConnectorId++;
     }
-<<<<<<< HEAD
-    QString text = QString("id: %1").arg(equipmentId);
-    labelId = new QLabel(text);
-    QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(render->body);
-    //тут можно поиграться с отображением
-    proxyWidget->setWidget(labelId);
-=======
 }
 
 Equipment* Equipment::CreateCopy(Equipment *equipment)
@@ -149,5 +137,4 @@ bool Equipment::Contains(QVector<Equipment *> equipments, Equipment *equipment)
     }
 
     return false;
->>>>>>> Network/master
 }

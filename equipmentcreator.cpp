@@ -104,11 +104,7 @@ void EquipmentCreator::on_pushButtonCreate_clicked()
     }
     QString name = ui->lineEditName->text();
     equipment = new Equipment(outputs, inputs);
-<<<<<<< HEAD
-    equipment->setText(name);
-=======
     equipment->name = name;
->>>>>>> Network/master
 
     EquipmentCreator::close();
 }

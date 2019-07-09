@@ -25,10 +25,6 @@ private slots:
 
     void on_open_triggered();
 
-    void readFile(const QString &filePath);
-
-    void createProject(const QString &projectName);
-
     void on_save_triggered();
 
     void on_close_triggered();
@@ -52,13 +48,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-<<<<<<< HEAD
-    QVector <Equipment*> equipments;
-    QVector <Equipment*> equipmentsOnScene;
-    int nextEquipmentId = 1;
-    int nextConnectorId = 1;
-    Equipment* CreateCopy(Equipment *equipment);
-=======
     QVector <Equipment*> equipmentsInProject;
     QVector <Equipment*> equipmentsInLibrary;
     QVector <Equipment*> equipmentsOnScene;
@@ -66,7 +55,6 @@ private:
     //Equipment* CreateCopy(Equipment *equipment);
     FileOrganizer *fileOrganizer;
     QString mainPath;
->>>>>>> Network/master
 };
 
 #endif // MAINWINDOW_H

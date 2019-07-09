@@ -16,12 +16,7 @@ public:
     explicit EquipmentCreator(QWidget *parent = nullptr);
     ~EquipmentCreator();
     Equipment* CreateEquipment();
-<<<<<<< HEAD
-public:
-    Equipment *equipment = nullptr;
-=======
 
->>>>>>> Network/master
 private slots:
     void on_pushButtonCreate_clicked();
 

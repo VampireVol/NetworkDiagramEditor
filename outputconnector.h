@@ -8,12 +8,8 @@
 #include <QDebug>
 #include <QCursor>
 
-<<<<<<< HEAD
-class InputConnctor;
-=======
 class InputConnector;
 
->>>>>>> Network/master
 class OutputConnector : public QObject, public QGraphicsItem
 {
 public:
@@ -24,11 +20,7 @@ public:
     int equipmentId;
 private:
     Qt::GlobalColor color;
-<<<<<<< HEAD
-    InputConnctor *link;
-=======
     InputConnector *link;
->>>>>>> Network/master
     /* Данные методы виртуальные, поэтому их необходимо реализовать
      * в случае наследования от QGraphicsItem
      * */
