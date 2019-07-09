@@ -6,8 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>742</width>
     <height>466</height>
+=======
+    <width>719</width>
+    <height>454</height>
+>>>>>>> Network/master
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +20,11 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
+<<<<<<< HEAD
     <normaloff>:/rec/img/icon_application.png</normaloff>:/rec/img/icon_application.png</iconset>
+=======
+    <normaloff>:/img/icon_application.png</normaloff>:/img/icon_application.png</iconset>
+>>>>>>> Network/master
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
@@ -114,7 +123,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
+<<<<<<< HEAD
      <width>742</width>
+=======
+     <width>719</width>
+>>>>>>> Network/master
      <height>21</height>
     </rect>
    </property>
@@ -127,6 +140,7 @@
     <addaction name="separator"/>
     <addaction name="save"/>
     <addaction name="separator"/>
+    <addaction name="save_as"/>
     <addaction name="close"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -134,7 +148,7 @@
      <string>Оборудование</string>
     </property>
     <addaction name="open_equipment_creator"/>
-    <addaction name="add_equipment"/>
+    <addaction name="add_delete_equipment"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -149,15 +163,21 @@
    <addaction name="create"/>
    <addaction name="open"/>
    <addaction name="save"/>
+<<<<<<< HEAD
    <addaction name="open_equipment_creator"/>
    <addaction name="add_equipment"/>
+=======
+   <addaction name="save_as"/>
+   <addaction name="open_equipment_creator"/>
+   <addaction name="add_delete_equipment"/>
+>>>>>>> Network/master
    <addaction name="close"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="create">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/create new.png</normaloff>:/rec/img/create new.png</iconset>
+     <normaloff>:/img/create new.png</normaloff>:/img/create new.png</iconset>
    </property>
    <property name="text">
     <string>Создать проект</string>
@@ -166,7 +186,7 @@
   <action name="open">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/open.png</normaloff>:/rec/img/open.png</iconset>
+     <normaloff>:/img/open.png</normaloff>:/img/open.png</iconset>
    </property>
    <property name="text">
     <string>Открыть проект</string>
@@ -175,7 +195,7 @@
   <action name="save">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/save.png</normaloff>:/rec/img/save.png</iconset>
+     <normaloff>:/img/save.png</normaloff>:/img/save.png</iconset>
    </property>
    <property name="text">
     <string>Сохранить</string>
@@ -184,7 +204,7 @@
   <action name="close">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/exit.png</normaloff>:/rec/img/exit.png</iconset>
+     <normaloff>:/img/exit.png</normaloff>:/img/exit.png</iconset>
    </property>
    <property name="text">
     <string>Выйти</string>
@@ -196,19 +216,33 @@
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/create equip.png</normaloff>:/rec/img/create equip.png</iconset>
+     <normaloff>:/img/create equip.png</normaloff>:/img/create equip.png</iconset>
    </property>
    <property name="text">
     <string>Создать оборудование</string>
    </property>
   </action>
-  <action name="add_equipment">
+  <action name="add_delete_equipment">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/rec/img/add.png</normaloff>:/rec/img/add.png</iconset>
+     <normaloff>:/img/add.png</normaloff>:/img/add.png</iconset>
    </property>
    <property name="text">
-    <string>Добавить оборудование</string>
+    <string>Добавить/Удалить оборудование</string>
+   </property>
+  </action>
+  <action name="delete_equipment">
+   <property name="text">
+    <string>Удалить оборудование</string>
+   </property>
+  </action>
+  <action name="save_as">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/img/save as.png</normaloff>:/img/save as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить как</string>
    </property>
   </action>
  </widget>

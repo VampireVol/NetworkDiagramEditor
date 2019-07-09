@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<equipment id="2">
+    <name>eq2</name>
+    <inputs>
+        <connector color="12" id="11"/>
+        <connector color="7" id="12"/>
+    </inputs>
+    <outputs>
+        <connector color="7" id="13"/>
+        <connector color="12" id="14"/>
+    </outputs>
+</equipment>

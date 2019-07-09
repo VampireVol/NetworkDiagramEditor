@@ -16,8 +16,12 @@ public:
     explicit EquipmentCreator(QWidget *parent = nullptr);
     ~EquipmentCreator();
     Equipment* CreateEquipment();
+<<<<<<< HEAD
 public:
     Equipment *equipment = nullptr;
+=======
+
+>>>>>>> Network/master
 private slots:
     void on_pushButtonCreate_clicked();
 
@@ -41,8 +45,15 @@ private slots:
 
     void on_pushButtonExit_clicked();
 
+    void on_lineEditName_textChanged();
+
+    void enable_pushButtonCreate();
+
 private:
     Ui::EquipmentCreator *ui;
+    bool listWidgetEquipment_isEmpty;
+    bool equipmentName_isGood;
+    Equipment *equipment = nullptr;
 };
 
 #endif // EQUIPMENTCREATOR_H

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "equipment.h"
+#include "fileorganizer.h"
+#include "projectname.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,7 +33,7 @@ private slots:
 
     void on_close_triggered();
 
-    void on_add_equipment_triggered();
+    void on_add_delete_equipment_triggered();
 
     void on_listWidget_itemClicked();
 
@@ -43,14 +45,28 @@ private slots:
 
     void on_pushDeleteConn_clicked();
 
+    void on_delete_equipment_triggered();
+
+    void on_save_as_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+<<<<<<< HEAD
     QVector <Equipment*> equipments;
     QVector <Equipment*> equipmentsOnScene;
     int nextEquipmentId = 1;
     int nextConnectorId = 1;
     Equipment* CreateCopy(Equipment *equipment);
+=======
+    QVector <Equipment*> equipmentsInProject;
+    QVector <Equipment*> equipmentsInLibrary;
+    QVector <Equipment*> equipmentsOnScene;
+    int nextEquipmentId;
+    //Equipment* CreateCopy(Equipment *equipment);
+    FileOrganizer *fileOrganizer;
+    QString mainPath;
+>>>>>>> Network/master
 };
 
 #endif // MAINWINDOW_H
