@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "equipment.h"
 #include "fileorganizer.h"
-#include "projectname.h"
+#include "connectionrule.h"
 
 namespace Ui {
 class MainWindow;
@@ -45,6 +45,15 @@ private slots:
 
     void on_save_as_triggered();
 
+    void on_add_connection_triggered();
+
+private slots:
+    void showDescription(Equipment *equipment);
+
+    void on_pushAddDescription_clicked();
+
+    void on_pushAddConn_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
@@ -52,9 +61,9 @@ private:
     QVector <Equipment*> equipmentsInLibrary;
     QVector <Equipment*> equipmentsOnScene;
     int nextEquipmentId;
-    //Equipment* CreateCopy(Equipment *equipment);
     FileOrganizer *fileOrganizer;
     QString mainPath;
+    ConnectionRule *connectionRule;
 };
 
 #endif // MAINWINDOW_H

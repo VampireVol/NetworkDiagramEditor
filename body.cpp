@@ -1,9 +1,9 @@
 #include "body.h"
 
-Body::Body(int maxInputOrOutput)
-    : maxInputOrOutput(maxInputOrOutput), height((2 * maxInputOrOutput + 1) * 20)
+Body::Body(int size)
+    : size(size), height((2 * size + 1) * 20)
 {
-
+    setFlag(ItemIsSelectable);
 }
 
 Body::~Body()
@@ -37,6 +37,7 @@ void Body::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
      * */
 
     this->setPos(mapToScene(event->pos() + m_shiftMouseCoords));
+    emit signalMove(event, m_shiftMouseCoords);
 }
 
 void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -44,6 +45,7 @@ void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
     /* При нажатии мышью на графический элемент
      * заменяем курсор на руку, которая держит этот элемента
      * */
+    //emit equipmentIsPressed();
     m_shiftMouseCoords = this->pos() - mapToScene(event->pos());
     this->setCursor(QCursor(Qt::ClosedHandCursor));
     Q_UNUSED(event);

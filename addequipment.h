@@ -18,8 +18,7 @@ public:
 
     void loadEquipments(QVector <Equipment*> equipmentsInLibrary, QVector<Equipment*> equipmentsInProject);
     QVector<Equipment*> getEquipmentsInProject();
-
-public:
+    QVector<Equipment*> getEquipmentsInLibrary();
     bool reject_isClicked();
 
 private slots: 
@@ -44,6 +43,8 @@ private:
     QVector<Equipment*> equipmentsInProject;
     QVector<Equipment*> equipmentsInLibrary;
     bool reject;
+    bool library_hasFocus;
+    bool project_hasFocus;
 };
 
 #endif // ADDEQUIPMENT_H

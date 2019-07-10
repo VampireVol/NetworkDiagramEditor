@@ -6,22 +6,20 @@
 #include "QMessageBox"
 #include <Qt>
 
-FileOrganizer::FileOrganizer(QString &projectName, QString mainPath)
-    :mainPath(mainPath), projectName(projectName)
+FileOrganizer::FileOrganizer(QString projectName, QString projectPath, QString mainPath, QString libraryPath)
+    :mainPath(mainPath), projectName(projectName), projectPath(projectPath), libraryPath(libraryPath)
 {
-    projectPath = mainPath + "/projects/" + projectName;
 }
 
 int FileOrganizer::openProject()
 {
     this->setPath(mainPath);
-    if(!this->exists("projects"))
-        this->mkdir("projects");
     if(!this->exists("library"))
         this->mkdir("library");
 
     this->setPath(projectPath);
-    if(!this->exists())
+    projectName = this->dirName();
+    if(!(this->exists("equipments") && this->exists("scheme.xml")))
         return 1;
     if(!openEquipments())
         return 2;
@@ -48,22 +46,24 @@ QVector <Equipment*> FileOrganizer::getEquipmentsInScheme()
     return equipmentsInScheme;
 }
 
-bool FileOrganizer::createProject()
+int FileOrganizer::createProject()
 {
     this->setPath(mainPath);
-    if(!this->exists("projects"))
-        this->mkdir("projects");
     if(!this->exists("library"))
         this->mkdir("library");
 
-    this->setPath(mainPath + "/projects");
+    this->setPath(projectPath);
+    if(this->exists(projectName))
+        return 1;
+
     this->mkdir(projectName);
-    this->cd(projectPath);
+    projectPath = projectPath + "/" + projectName;
+    this->setPath(projectPath);
     this->mkdir("equipments");
 
     QFile file(projectPath + "/scheme.xml");
     if (!file.open(QIODevice::WriteOnly))
-        return 1;
+        return 3;
 
     QXmlStreamWriter xmlWriter(&file);
     xmlWriter.setAutoFormatting(true);
@@ -77,41 +77,88 @@ bool FileOrganizer::createProject()
     equipmentsInLibrary.clear();
     equipmentsInScheme.clear();
 
-    if(openLibrary())
-        return true;
-    else
-        return false;
+    if(!openLibrary())
+        return 2;
+
+    return 0;
 }
 
-void FileOrganizer::addEquipment(Equipment *equipment)
+bool FileOrganizer::removeDir(const QString & dirName)
 {
-    FileOrganizer::setCurrent(projectPath + "/equipments");
-    QFile file(equipment->text() + ".xml");
-    file.open(QIODevice::WriteOnly);
+    bool result = true;
+    QDir dir(dirName);
+
+    if (dir.exists(dirName)) {
+        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+            if (info.isDir()) {
+                result = removeDir(info.absoluteFilePath());
+            }
+            else {
+                result = QFile::remove(info.absoluteFilePath());
+            }
+
+            if (!result) {
+                return result;
+            }
+        }
+        result = dir.rmdir(dirName);
+    }
+    return result;
+}
+
+int FileOrganizer::editProjectPath(QVector<Equipment*> equipmentsInScheme, QString newProjectPath)
+{
+    if(newProjectPath == projectPath)
+        return 1;
+    this->setPath(projectPath);
+    this->setPath(newProjectPath);
+    if(this->exists(projectName))
+        return 2;
+
+    saveScheme(equipmentsInScheme);
+
+    this->mkdir(projectName);
+    newProjectPath = newProjectPath + "/" + projectName;
+    this->setPath(newProjectPath);
+    this->mkdir("equipments");
+
+    if(!QFile::copy(projectPath + "/scheme.xml", newProjectPath + "/scheme.xml"))
+        return 2;
+    this->setPath(projectPath + "/equipments");
+    QStringList entryList = this->entryList();
+    for(int i = 2; i < entryList.size(); i++)
+    {
+        if(!QFile::copy(projectPath + "/equipments/" + entryList[i], newProjectPath + "/equipments/" + entryList[i]))
+            return 3;
+    }
+
+    this->cdUp();
+    this->removeRecursively();
+    //this->cdUp();
+    //if(!this->rmdir(projectName))
+    //    return false;
+    projectPath = newProjectPath;
+    return 0;
+}
+
+void FileOrganizer::addEquipment(Equipment *equipment, QString path)
+{
+    FileOrganizer::setCurrent(path);
+    QFile file(equipment->name + ".xml");
+    file.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
     QXmlStreamWriter xmlWriter(&file);
     xmlWriter.setAutoFormatting(true);
     xmlWriter.writeStartDocument();
     xmlWriter.writeStartElement("equipment");
-    //xmlWriter.writeAttribute("id", QString::number(equipment->equipmentId));
     xmlWriter.writeStartElement("name");
     xmlWriter.writeCharacters(equipment->name);
     xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("inputs");
-    foreach(InputConnector* connector, equipment->render->inputs)
+    xmlWriter.writeStartElement("connectors");
+    foreach(Connector* connector, equipment->render->connectors)
     {
         xmlWriter.writeStartElement("connector");
         xmlWriter.writeAttribute("color", QString::number(connector->GetColor()));
-        //xmlWriter.writeAttribute("id", QString::number(equipment->render->inputs[i]->connectorId));
-        xmlWriter.writeEndElement();
-    }
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("outputs");
-    foreach(InputConnector* connector, equipment->render->inputs)
-    {
-        xmlWriter.writeStartElement("connector");
-        xmlWriter.writeAttribute("color", QString::number(connector->GetColor()));
-        //xmlWriter.writeAttribute("id", QString::number(equipment->render->outputs[i]->connectorId));
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndElement();
@@ -120,8 +167,17 @@ void FileOrganizer::addEquipment(Equipment *equipment)
     xmlWriter.writeEndDocument();
 
     file.close();
-    QFile::copy(file.fileName(), mainPath + "/library/" + file.fileName());
+}
+
+void FileOrganizer::addEquipmentToProject(Equipment *equipment)
+{
+    addEquipment(equipment, projectPath + "/equipments");
     equipmentsInProject.push_back(Equipment::CreateCopy(equipment));
+}
+
+void FileOrganizer::addEquipmentToLibrary(Equipment *equipment)
+{
+    addEquipment(equipment, libraryPath);
     equipmentsInLibrary.push_back(Equipment::CreateCopy(equipment));
 }
 
@@ -133,7 +189,7 @@ bool FileOrganizer::saveScheme(QVector<Equipment *> equipmentsInScheme)
 
     FileOrganizer::setCurrent(projectPath);
     QFile file("scheme.xml");
-    if (!file.open(QIODevice::WriteOnly))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         return false;
 
     QXmlStreamWriter xmlWriter(&file);
@@ -147,20 +203,8 @@ bool FileOrganizer::saveScheme(QVector<Equipment *> equipmentsInScheme)
         //xmlWriter.writeStartElement("name");
         //xmlWriter.writeCharacters(equipment->name);
         //xmlWriter.writeEndElement();
-        xmlWriter.writeStartElement("inputs");
-        foreach(InputConnector* connector, equipment->render->inputs)
-        {
-            xmlWriter.writeStartElement("connector");
-            xmlWriter.writeAttribute("id", QString::number(connector->connectorId));
-            xmlWriter.writeAttribute("color", QString::number(connector->GetColor()));
-            xmlWriter.writeStartElement("link");
-            //Информация о связи
-            xmlWriter.writeEndElement();
-            xmlWriter.writeEndElement();
-        }
-        xmlWriter.writeEndElement();
-        xmlWriter.writeStartElement("outputs");
-        foreach(OutputConnector* connector, equipment->render->outputs)
+        xmlWriter.writeStartElement("connectors");
+        foreach(Connector* connector, equipment->render->connectors)
         {
             xmlWriter.writeStartElement("connector");
             xmlWriter.writeAttribute("id", QString::number(connector->connectorId));
@@ -181,7 +225,7 @@ bool FileOrganizer::saveScheme(QVector<Equipment *> equipmentsInScheme)
     return true;
 }
 
-void FileOrganizer::deleteEquipment(QString name)
+void FileOrganizer::deleteEquipmentFromProject(QString name)
 {
     this->setPath(projectPath + "/equipments");
     this->remove(name + ".xml");
@@ -192,9 +236,23 @@ void FileOrganizer::deleteEquipment(QString name)
     }
 }
 
+void FileOrganizer::deleteEquipmentFromLibrary(QString name)
+{
+    this->setPath(libraryPath);
+    this->remove(name + ".xml");
+    for(int i = 0; i < equipmentsInLibrary.size(); i++)
+    {
+        if(equipmentsInLibrary[i]->name == name)
+            equipmentsInLibrary.remove(i);
+    }
+}
+
 bool FileOrganizer::openEquipments()
 {
     FileOrganizer::setCurrent(projectPath + "/equipments");
+    this->setPath(projectPath);
+    if(!this->exists("equipments"))
+        return false;
     this->setPath(projectPath + "/equipments");
     QString filePath;
     QStringList entryList = this->entryList();
@@ -207,74 +265,37 @@ bool FileOrganizer::openEquipments()
             return false;
         else{
              QString equipmentName;
-             //int equipmentId;
-             QVector <OutputConnector*> outputs;
-             QVector <InputConnector*> inputs;
+             QVector <Connector*> connectors;
 
              QXmlStreamReader xmlReader;
              xmlReader.setDevice(&file);
-             //while(xmlReader.name() != "equipment")
-             //    xmlReader.readNext();
-             //equipmentId = xmlReader.attributes().begin()->value().toInt();
+             xmlReader.readNext();
+             xmlReader.readNext();
+             if(xmlReader.name() != "equipment")
+                 continue;
 
              while(xmlReader.name() != "name")
                  xmlReader.readNext();
              equipmentName = xmlReader.readElementText();
-
-             while(xmlReader.name() != "inputs")
+             while(xmlReader.name() != "connectors")
                  xmlReader.readNext();
-             QVector <int> colors_in;
-             //QVector <int> identificators_in;
-             while(!(xmlReader.name() == "inputs" && xmlReader.isEndElement()))
+             QVector <int> colors;
+             while(!(xmlReader.name() == "connectors" && xmlReader.isEndElement()))
              {
                  if(xmlReader.name() == "connector")
                  {
                      foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
                      {
-                         //if(attr.name().toString() == "color")
-                             colors_in.push_back(attr.value().toInt());
-                        // else if(attr.name().toString() == "id")
-                        //     identificators_in.push_back(attr.value().toInt());
+                         colors.push_back(attr.value().toInt());
                      }
                  }
                  xmlReader.readNext();
              }
-             while(xmlReader.name() != "outputs")
-                 xmlReader.readNext();
-             QVector <int> colors_out;
-             //QVector <int> identificators_out;
-             while(!xmlReader.atEnd())
-             {
-                     if(xmlReader.name() == "connector")
-                     {
-                         foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
-                         {
-                             //if(attr.name().toString() == "color")
-                                 colors_out.push_back(attr.value().toInt());
-                             //else if(attr.name().toString() == "id")
-                             //    identificators_out.push_back(attr.value().toInt());
-                         }
-                     }
-                 xmlReader.readNext();
-             }
 
-             inputs = setInputs(colors_in);
-             outputs = setOutputs(colors_out);
+             connectors = setConnectors(colors);
 
-             /*for(int i = 0; i < identificators_in.size(); i++)
-             {
-                 inputs[i]->connectorId = identificators_in[i];
-                 inputs[i]->equipmentId = equipmentId;
-             }
-             for(int i = 0; i < identificators_out.size(); i++)
-             {
-                 outputs[i]->connectorId = identificators_out[i];
-                 outputs[i]->equipmentId = equipmentId;
-             }*/
-
-             Equipment* equipment = new Equipment(outputs, inputs);
+             Equipment* equipment = new Equipment(connectors);
              equipment->name = equipmentName;
-             //equipment->equipmentId = equipmentId;
              equipmentsInProject.push_back(equipment);
         }
         file.close();
@@ -286,6 +307,9 @@ bool FileOrganizer::openEquipments()
 bool FileOrganizer::openScheme()
 {
     FileOrganizer::setCurrent(projectPath);
+    this->setPath(projectPath);
+    if(!this->exists("scheme.xml"))
+        return false;
 
     QFile file("scheme.xml");
     if (!file.open(QFile::ReadOnly | QFile::Text))
@@ -294,39 +318,39 @@ bool FileOrganizer::openScheme()
         equipmentsInScheme.clear();
         QXmlStreamReader xmlReader;
         xmlReader.setDevice(&file);
-        QVector <OutputConnector*> outputs;
-        QVector <InputConnector*> inputs;
-        QVector <int> colors_in;
-        QVector <int> identificators_in;
-        QVector <int> colors_out;
-        QVector <int> identificators_out;
+        xmlReader.readNext();
+        xmlReader.readNext();
+        if(xmlReader.name() != "scheme")
+            return false;
+        QVector <Connector*> connectors;
+        QVector <int> colors;
+        QVector <int> identificators;
         int equipmentId;
         while(!xmlReader.atEnd())
         {
             if(xmlReader.name() == "equipment" && xmlReader.isStartElement())
             {
-                outputs.clear();
-                inputs.clear();
+                connectors.clear();
                 foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
                 {
                     equipmentId = attr.value().toInt();
                 }
-                colors_in.clear();
-                identificators_in.clear();
-                while(xmlReader.name() != "inputs")
+                colors.clear();
+                identificators.clear();
+                while(xmlReader.name() != "connectors")
                     xmlReader.readNext();
-                if(xmlReader.name() == "inputs")
+                if(xmlReader.name() == "connectors")
                 {
-                    while(!(xmlReader.name() == "inputs" && xmlReader.isEndElement()))
+                    while(!(xmlReader.name() == "connectors" && xmlReader.isEndElement()))
                     {
                         if(xmlReader.name() == "connector")
                         {
                             foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
                             {
                                 if(attr.name().toString() == "id")
-                                    identificators_in.push_back(attr.value().toInt());
+                                    identificators.push_back(attr.value().toInt());
                                 else if(attr.name().toString() == "color")
-                                    colors_in.push_back(attr.value().toInt());
+                                    colors.push_back(attr.value().toInt());
                             }
                             //xmlReader.readNext();
                             /*if(xmlReader.name() == "link")
@@ -344,52 +368,14 @@ bool FileOrganizer::openScheme()
                         xmlReader.readNext();
                     }
                 }
-                colors_out.clear();
-                identificators_out.clear();
-                while(xmlReader.name() != "outputs")
-                    xmlReader.readNext();
-                if(xmlReader.name() == "outputs")
-                {
-                    while(!(xmlReader.name() == "outputs" && xmlReader.isEndElement()))
-                    {
-                        if(xmlReader.name() == "connector")
-                        {
-                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
-                            {
-                                if(attr.name().toString() == "id")
-                                    identificators_out.push_back(attr.value().toInt());
-                                else if(attr.name().toString() == "color")
-                                    colors_out.push_back(attr.value().toInt());
-                            }
-                            /*xmlReader.readNext();
-                            if(xmlReader.name() == "link")
-                            {
-                                if(xmlReader.isStartElement())
-                                {
-                                    //считываем связь
-                                    xmlReader.readNext();
-                                }
-                                else {
-                                    xmlReader.readNext();
-                                }
-                            }*/
-                        }
-                        xmlReader.readNext();
-                    }
-                }
-                inputs = setInputs(colors_in);
-                outputs = setOutputs(colors_out);
-                Equipment* equipment = new Equipment(outputs, inputs);
+
+                connectors = setConnectors(colors);
+                Equipment* equipment = new Equipment(connectors);
                 equipment->equipmentId = equipmentId;
-                for(int i = 0; i < identificators_in.size(); i++)
+                for(int i = 0; i < identificators.size(); i++)
                 {
-                    equipment->render->inputs[i]->connectorId = identificators_in[i];
-                    equipment->render->inputs[i]->equipmentId = equipmentId;
-                }
-                for(int i = 0; i < identificators_out.size(); i++)
-                {
-                    equipment->render->outputs[i]->connectorId = identificators_out[i];
-                    equipment->render->outputs[i]->equipmentId = equipmentId;
+                    equipment->render->connectors[i]->connectorId = identificators[i];
+                    equipment->render->connectors[i]->equipmentId = equipmentId;
                 }
                 equipmentsInScheme.push_back(equipment);
             }
@@ -403,8 +389,11 @@ bool FileOrganizer::openScheme()
 
 bool FileOrganizer::openLibrary()
 {
-    FileOrganizer::setCurrent(mainPath + "/library");
-    this->setPath(mainPath + "/library");
+    FileOrganizer::setCurrent(libraryPath);
+    this->setPath(mainPath);
+    if(!this->exists("library"))
+        return false;
+    this->setPath(libraryPath);
 
     QString filePath;
     QStringList entryList = this->entryList();
@@ -414,78 +403,41 @@ bool FileOrganizer::openLibrary()
         filePath = entryList[i];
         QFile file(filePath);
         if (!file.open(QFile::ReadOnly | QFile::Text))
-            return false;
+            continue;
         else{
-             QString equipmentName;
-             //int equipmentId;
-             QVector <OutputConnector*> outputs;
-             QVector <InputConnector*> inputs;
+            QString equipmentName;
+            QVector <Connector*> connectors;
 
-             QXmlStreamReader xmlReader;
-             xmlReader.setDevice(&file);
-             //while(xmlReader.name() != "equipment")
-             //    xmlReader.readNext();
-             //equipmentId = xmlReader.attributes().begin()->value().toInt();
+            QXmlStreamReader xmlReader;
+            xmlReader.setDevice(&file);
+            xmlReader.readNext();
+            xmlReader.readNext();
+            if(xmlReader.name() != "equipment")
+                return false;
 
-             while(xmlReader.name() != "name")
-                 xmlReader.readNext();
-             equipmentName = xmlReader.readElementText();
+            while(xmlReader.name() != "name")
+                xmlReader.readNext();
+            equipmentName = xmlReader.readElementText();
+            while(xmlReader.name() != "connectors")
+                xmlReader.readNext();
+            QVector <int> colors;
+            while(!(xmlReader.name() == "connectors" && xmlReader.isEndElement()))
+            {
+                if(xmlReader.name() == "connector")
+                {
+                    foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
+                    {
+                        colors.push_back(attr.value().toInt());
+                    }
+                }
+                xmlReader.readNext();
+            }
 
-             while(xmlReader.name() != "inputs")
-                 xmlReader.readNext();
-             QVector <int> colors_in;//Qt::GlobalColor
-             //QVector <int> identificators_in;
-             while(!(xmlReader.name() == "inputs" && xmlReader.isEndElement()))
-             {
-                 if(xmlReader.name() == "connector")
-                 {
-                     foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
-                     {
-                         //if(attr.name().toString() == "color")
-                             colors_in.push_back(attr.value().toInt());
-                         //else if(attr.name().toString() == "id")
-                         //    identificators_in.push_back(attr.value().toInt());
-                     }
-                 }
-                 xmlReader.readNext();
-             }
-             while(xmlReader.name() != "outputs")
-                 xmlReader.readNext();
-             QVector <int> colors_out;//Qt::GlobalColor
-             //QVector <int> identificators_out;
-             while(!xmlReader.atEnd())
-             {
-                 if(xmlReader.name() == "connector")
-                 {
-                         foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
-                         {
-                             //if(attr.name().toString() == "color")
-                                 colors_out.push_back(attr.value().toInt());
-                             //else if(attr.name().toString() == "id")
-                             //    identificators_out.push_back(attr.value().toInt());
-                         }
-                 }
-                 xmlReader.readNext();
-             }
+            connectors = setConnectors(colors);
 
-             inputs = setInputs(colors_in);
-             outputs = setOutputs(colors_out);
-
-             /*for(int i = 0; i < identificators_in.size(); i++)
-             {
-                 inputs[i]->connectorId = identificators_in[i];
-                 inputs[i]->equipmentId = equipmentId;
-             }
-             for(int i = 0; i < identificators_out.size(); i++)
-             {
-                 outputs[i]->connectorId = identificators_out[i];
-                 outputs[i]->equipmentId = equipmentId;
-             }*/
-
-             Equipment* equipment = new Equipment(outputs, inputs);
-             equipment->name = equipmentName;
-             //equipment->equipmentId = equipmentId;
-             equipmentsInLibrary.push_back(equipment);
+            Equipment* equipment = new Equipment(connectors);
+            equipment->name = equipmentName;
+            equipmentsInLibrary.push_back(equipment);
         }
         file.close();
     }
@@ -493,37 +445,37 @@ bool FileOrganizer::openLibrary()
     return true;
 }
 
-QVector <InputConnector*> FileOrganizer::setInputs(QVector<int> colors_in)
+QVector <Connector*> FileOrganizer::setConnectors(QVector<int> colors)
 {
-    QVector <InputConnector*> inputs;
+    QVector <Connector*> connectors;
 
-    foreach(int color, colors_in)
+    foreach(int color, colors)
     {
         switch(color)
         {
         case Qt::red:
         {
-            inputs.push_back(new InputConnectorRed());
+            connectors.push_back(new ConnectorRed());
             break;
         }
         case Qt::blue:
         {
-            inputs.push_back(new InputConnectorBlue());
+            connectors.push_back(new ConnectorBlue());
             break;
         }
         case Qt::green:
         {
-            inputs.push_back(new InputConnectorGreen());
+            connectors.push_back(new ConnectorGreen());
             break;
         }
         case Qt::cyan:
         {
-            inputs.push_back(new InputConnectorCyan());
+            connectors.push_back(new ConnectorCyan());
             break;
         }
         case Qt::yellow:
         {
-            inputs.push_back(new InputConnectorYellow());
+            connectors.push_back(new ConnectorYellow());
             break;
         }
         default:
@@ -533,48 +485,5 @@ QVector <InputConnector*> FileOrganizer::setInputs(QVector<int> colors_in)
         }
     }
 
-    return inputs;
-}
-
-QVector <OutputConnector*> FileOrganizer::setOutputs(QVector<int> colors_out)
-{
-    QVector <OutputConnector*> outputs;
-
-    foreach(int color, colors_out)
-    {
-        switch(color)
-        {
-        case Qt::red:
-        {
-            outputs.push_back(new OutputConnectorRed());
-            break;
-        }
-        case Qt::blue:
-        {
-            outputs.push_back(new OutputConnectorBlue());
-            break;
-        }
-        case Qt::green:
-        {
-            outputs.push_back(new OutputConnectorGreen());
-            break;
-        }
-        case Qt::cyan:
-        {
-            outputs.push_back(new OutputConnectorCyan());
-            break;
-        }
-        case Qt::yellow:
-        {
-            outputs.push_back(new OutputConnectorYellow());
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }
-    }
-
-    return outputs;
+    return connectors;
 }

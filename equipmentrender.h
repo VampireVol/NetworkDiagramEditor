@@ -3,17 +3,15 @@
 
 #include<QVector>
 #include<body.h>
-#include<outputconnector.h>
-#include<inputconnector.h>
+#include<connector.h>
 
 class EquipmentRender
 {
 public:
-    EquipmentRender(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
+    EquipmentRender(QVector <Connector*> connectors);
 
     Body *body;
-    QVector <OutputConnector*> outputs;
-    QVector <InputConnector*> inputs;
+    QVector <Connector*> connectors;
 };
 
 #endif // EQUIPMENTRENDER_H

@@ -17,6 +17,8 @@ public:
     explicit SelectPath(QWidget *parent = nullptr);
     ~SelectPath();
 
+    QString getProjectPath();
+
 private slots:
     void on_listView_doubleClicked(const QModelIndex &index);
 
@@ -29,6 +31,8 @@ private slots:
 private:
     Ui::SelectPath *ui;
     QFileSystemModel *model;
+    QModelIndex current;
+    QString projectPath;
 };
 
 #endif // SELECTPATH_H

@@ -12,7 +12,7 @@ class Equipment : public QListWidgetItem
 {
 public:
     //Equipment();
-    Equipment(QVector <OutputConnector*> outputs, QVector <InputConnector*> inputs);
+    Equipment(QVector <Connector*> connectors);
     ~Equipment();
     QLabel *labelId;
     QString name;

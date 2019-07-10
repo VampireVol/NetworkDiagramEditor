@@ -10,11 +10,13 @@
 
 class Body  : public QObject, public QGraphicsItem
 {
+    Q_OBJECT
 public:
-    Body(int maxInputOrOutput);
+    Body(int size);
     ~Body();
+
 private:
-    int maxInputOrOutput;
+    int size;
     int height;
     QPointF m_shiftMouseCoords;
     QRectF boundingRect() const;
@@ -22,6 +24,10 @@ private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+signals:
+    void equipmentIsPressed();
+    void signalMove(QGraphicsSceneMouseEvent *event, QPointF m_shiftMouseCoords);
 };
 
 #endif // BODY_H

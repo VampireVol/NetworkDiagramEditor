@@ -1,7 +1,8 @@
-#ifndef SELECTPATH_H
-#define SELECTPATH_H
+#ifndef PROJECTNAME_H
+#define PROJECTNAME_H
 
 #include <QDialog>
+#include "connectionrule.h"
 
 namespace Ui {
 class ProjectName;
@@ -27,6 +28,7 @@ private slots:
 private:
     Ui::ProjectName *ui;
     bool projectName_isSelected;
+    ConnectionRule connectionRule;
 };
 
-#endif // SELECTPATH_H
+#endif // PROJECTNAME_H

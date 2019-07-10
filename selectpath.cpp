@@ -12,6 +12,7 @@ SelectPath::SelectPath(QWidget *parent) :
     model->setFilter(QDir::Dirs);
     model->setRootPath("");
     ui->listView->setModel(model);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 SelectPath::~SelectPath()
@@ -21,6 +22,7 @@ SelectPath::~SelectPath()
 
 void SelectPath::on_listView_doubleClicked(const QModelIndex &index)
 {
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     QListView *listView = ui->listView;
     QFileInfo fileInfo = model->fileInfo(index);
     if(fileInfo.fileName() == "..")
@@ -43,15 +45,22 @@ void SelectPath::on_listView_doubleClicked(const QModelIndex &index)
 
 void SelectPath::on_buttonBox_accepted()
 {
-
+    projectPath = model->filePath(current);
+    SelectPath::close();
 }
 
 void SelectPath::on_buttonBox_rejected()
 {
-
+    SelectPath::close();
 }
 
 void SelectPath::on_listView_clicked(const QModelIndex &index)
 {
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    current = index;
+}
 
+QString SelectPath::getProjectPath()
+{
+    return projectPath;
 }
