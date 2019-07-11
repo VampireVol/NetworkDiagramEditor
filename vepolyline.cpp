@@ -11,6 +11,8 @@ VEPolyline::VEPolyline(Body *first, Body *end, QObject *parent) :
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
+    connect(first, &Body::signalMove, this, &VEPolyline::slotMove);
+    connect(end, &Body::signalMove, this, &VEPolyline::slotMove);
 }
 
 VEPolyline::~VEPolyline()
@@ -35,36 +37,6 @@ void VEPolyline::setPreviousPosition(const QPointF previousPosition)
 void VEPolyline::setPath(const QPainterPath &path)
 {
     QGraphicsPathItem::setPath(path);
-}
-
-void VEPolyline::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (m_leftMouseButtonPressed) {
-        auto dx = event->scenePos().x() - m_previousPosition.x();
-        auto dy = event->scenePos().y() - m_previousPosition.y();
-        moveBy(dx,dy);
-        setPreviousPosition(event->scenePos());
-        emit signalMove(this, dx, dy);
-    }
-    QGraphicsItem::mouseMoveEvent(event);
-}
-
-void VEPolyline::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() & Qt::LeftButton) {
-        m_leftMouseButtonPressed = true;
-        setPreviousPosition(event->scenePos());
-        emit clicked(this);
-    }
-    QGraphicsItem::mousePressEvent(event);
-}
-
-void VEPolyline::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() & Qt::LeftButton) {
-        m_leftMouseButtonPressed = false;
-    }
-    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 void VEPolyline::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -125,14 +97,6 @@ void VEPolyline::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
         DotSignal *dot = new DotSignal(point, this);
         connect(dot, &DotSignal::signalMove, this, &VEPolyline::slotMove);
         connect(dot, &DotSignal::signalMouseRelease, this, &VEPolyline::checkForDeletePoints);
-        if (i == 0)
-        {
-            connect(first, &Body::signalMove, dot, &DotSignal::slotMove);
-        }
-        else if (i == linePath.elementCount())
-        {
-            connect(end, &Body::signalMove, dot, &DotSignal::slotMove);
-        }
         dot->setDotFlags(DotSignal::Movable);
 
         listDotes.append(dot);
@@ -143,11 +107,24 @@ void VEPolyline::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 void VEPolyline::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
     QPainterPath linePath = path();
-    for(int i = 0; i < linePath.elementCount(); i++){
-        if(listDotes.at(i) == signalOwner){
-            QPointF pathPoint = linePath.elementAt(i);
-            linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
-            m_pointForCheck = i;
+    if (signalOwner == first)
+    {
+        QPointF pathPoint = linePath.elementAt(0);
+        linePath.setElementPositionAt(0, pathPoint.x() + dx, pathPoint.y() + dy);
+    }
+    else if (signalOwner == end)
+    {
+        QPointF pathPoint = linePath.elementAt(linePath.elementCount() - 1);
+        linePath.setElementPositionAt(linePath.elementCount() - 1, pathPoint.x() + dx, pathPoint.y() + dy);
+    }
+    else
+    {
+        for(int i = 0; i < linePath.elementCount(); i++){
+            if(listDotes.at(i) == signalOwner){
+                QPointF pathPoint = linePath.elementAt(i);
+                linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
+                m_pointForCheck = i;
+            }
         }
     }
     setPath(linePath);

@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushAddDescription->setEnabled(false);
     //ui->pushAddConn->setEnabled(false);
     scene = new QGraphicsScene();
+    connectionRule = new ConnectionRule(); //ВРЕМЕННО!!!!
     ui->graphicsView->setScene(scene);
     mainPath = FileOrganizer::currentPath();//"V:/study/QtProjects/build-DiagramNetworkEditor-Desktop_Qt_5_13_0_MSVC2017_64bit-Release";
 }
@@ -65,7 +66,7 @@ void MainWindow::on_create_triggered()
                 ui->open_equipment_creator->setEnabled(true);
                 ui->add_delete_equipment->setEnabled(true);
                 ui->add_connection->setEnabled(true);
-                connectionRule = new ConnectionRule;
+                connectionRule = new ConnectionRule();
                 equipmentsInProject.clear();
                 equipmentsInLibrary.clear();
                 equipmentsOnScene.clear();
@@ -348,39 +349,71 @@ void MainWindow::on_save_as_triggered()
 
 void MainWindow::on_pushAddConn_clicked()
 {
-    if (scene->selectedItems().size() == 2 && scene->selectedItems().first()->type() == Connector::Type)
+    if (scene->selectedItems().size() == 2 &&
+            scene->selectedItems().first()->type() == Connector::Type &&
+            scene->selectedItems().last()->type() == Connector::Type)
     {
         Connector *first = qgraphicsitem_cast<Connector*>(scene->selectedItems().first());
-        Connector *end = qgraphicsitem_cast<Connector*>(scene->selectedItems().back());
-        Equipment *firstEq;
-        Equipment *endEq;
-        for(int i = 0; i < equipmentsOnScene.size(); ++i)
+        Connector *end = qgraphicsitem_cast<Connector*>(scene->selectedItems().last());
+        //qDebug() << first->equipmentId << " " << end->equipmentId;
+        if (first->equipmentId != end->equipmentId)
         {
-            if(equipmentsOnScene[i]->equipmentId == first->equipmentId)
+            if (first->IsNull() && end->IsNull())
             {
-                firstEq = equipmentsOnScene[i];
+                qDebug() << first->GetColor() << " " << end->GetColor() << " " << connectionRule->GetRule(first->GetColor(), end->GetColor());
+                if (connectionRule->GetRule(first->GetColor(), end->GetColor()))
+                {
+                    Equipment *firstEq = nullptr;
+                    Equipment *endEq = nullptr;
+                    for(int i = 0; i < equipmentsOnScene.size(); ++i)
+                    {
+                        if(equipmentsOnScene[i]->equipmentId == first->equipmentId)
+                        {
+                            firstEq = equipmentsOnScene[i];
 
+                        }
+                        else if(equipmentsOnScene[i]->equipmentId == end->equipmentId)
+                        {
+                            endEq = equipmentsOnScene[i];
+                        }
+
+                    }
+
+                    VEPolyline *polyline = new VEPolyline(firstEq->render->body, endEq->render->body);
+                    QPainterPath path;
+                    QPointF fixPos;
+                    fixPos.setX(10);
+                    fixPos.setY(10);
+                    path.moveTo(firstEq->render->body->pos() + first->pos() + fixPos);
+                    path.lineTo(endEq->render->body->pos() + end->pos() + fixPos);
+                    scene->addItem(polyline);
+                    polyline->setPath(path);
+                    QPen pen;
+                    pen.setWidth(2);
+                    polyline->setPen(pen);
+                    polyline->setZValue(-1);
+                    first->SetLink(end);
+                    end->SetLink(first);
+                }
+                else
+                {
+                    ui->statusBar->showMessage("Совершается запрещенное соединение!");
+                }
             }
-            else if(equipmentsOnScene[i]->equipmentId == end->equipmentId)
+            else
             {
-                endEq = equipmentsOnScene[i];
+                ui->statusBar->showMessage("Один из коннекторов уже связан");
             }
-
+        }
+        else
+        {
+            ui->statusBar->showMessage("Связь коннекторов одного оборудования запрещена!");
         }
 
-        VEPolyline *polyline = new VEPolyline(equipmentsOnScene[0]->render->body, equipmentsOnScene[1]->render->body);
-        QPainterPath path;
-        QPointF point;
-        point.setX(10);
-        point.setY(10);
-        path.moveTo(firstEq->render->body->pos() + first->pos() + point);
-        path.lineTo(endEq->render->body->pos() + end->pos() + point);
-        scene->addItem(polyline);
-        polyline->setPath(path);
-        QPen pen;
-        pen.setWidth(2);
-        polyline->setPen(pen);
-        polyline->setZValue(-1);
+    }
+    else
+    {
+        ui->statusBar->showMessage("Для добовления выделете два коннектора через Ctrl");
     }
 }
 
@@ -390,8 +423,9 @@ void MainWindow::on_add_connection_triggered()
     AddRule window;
     window.setModal(true);
     window.exec();
-    if(window.getColor_1() != 0 && window.getColor_2() != 0)
-        connectionRule->setRule(window.getColor_1(), window.getColor_2(), window.getRule());
+    if(!window.isReject())
+        connectionRule->SetRule(window.getColor_1(), window.getColor_2(), window.getRule());
+    qDebug() << "123";
 }
 
 void MainWindow::showDescription(Equipment *equipment)

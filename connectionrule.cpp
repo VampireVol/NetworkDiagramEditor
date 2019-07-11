@@ -1,91 +1,77 @@
 #include "connectionrule.h"
-
+#include <QDebug>
 ConnectionRule::ConnectionRule()
-    :red_red(true),
-     red_blue(false),
-     red_cyan(false),
-     red_green(false),
-     red_yellow(false),
-     blue_blue(true),
-     blue_cyan(false),
-     blue_green(false),
-     blue_yellow(false),
-     cyan_cyan(true),
-     cyan_green(false),
-     cyan_yellow(false),
-     green_green(true),
-     green_yellow(false),
-     yellow_yellow(true)
 {
-
+    for(int i = 0; i < size; ++i)
+    {
+        for(int j = 0; j < size; ++j)
+        {
+            if(i == j)
+            {
+                rules[i][j] = true;
+            }
+            else
+            {
+                rules[i][j] = false;
+            }
+        }
+    }
 }
 
-void ConnectionRule::setRule(int color1, int color2, bool rule)
+void ConnectionRule::SetRule(Qt::GlobalColor color1, Qt::GlobalColor color2, bool rule)
 {
-    if(color1 == Qt::red && color2 == Qt::red)
-        red_red = rule;
-    else if(color1 == Qt::red && color2 == Qt::blue)
-        red_blue = rule;
-    else if(color1 == Qt::red && color2 == Qt::cyan)
-        red_cyan = rule;
-    else if(color1 == Qt::red && color2 == Qt::yellow)
-        red_yellow = rule;
-    else if(color1 == Qt::red && color2 == Qt::green)
-        red_green = rule;
-    else if(color1 == Qt::blue && color2 == Qt::blue)
-        blue_blue = rule;
-    else if(color1 == Qt::blue && color2 == Qt::cyan)
-        blue_cyan = rule;
-    else if(color1 == Qt::blue && color2 == Qt::green)
-        blue_green = rule;
-    else if(color1 == Qt::blue && color2 == Qt::yellow)
-        blue_yellow = rule;
-    else if(color1 == Qt::cyan && color2 == Qt::cyan)
-        cyan_cyan = rule;
-    else if(color1 == Qt::cyan && color2 == Qt::green)
-        cyan_green = rule;
-    else if(color1 == Qt::cyan && color2 == Qt::yellow)
-        cyan_yellow = rule;
-    else if(color1 == Qt::green && color2 == Qt::green)
-        green_green = rule;
-    else if(color1 == Qt::green && color2 == Qt::yellow)
-        green_yellow = rule;
-    else if(color1 == Qt::yellow && color2 == Qt::yellow)
-        yellow_yellow = rule;
+    int col = GetIndex(color1);
+    int row = GetIndex(color2);
+    qDebug() << "345" << color1 << color2;
+    if (col != -1 && row != -1)
+    {
+        rules[row][col] = rule;
+        rules[col][row] = rule;
+        qDebug() << "567" << rule;
+    }
 }
 
-bool ConnectionRule::getRule(int color1, int color2)
+bool ConnectionRule::GetRule(Qt::GlobalColor color1, Qt::GlobalColor color2)
 {
-    if(color1 == Qt::red && color2 == Qt::red)
-        return red_red;
-    else if(color1 == Qt::red && color2 == Qt::blue)
-        return red_blue;
-    else if(color1 == Qt::red && color2 == Qt::cyan)
-        return red_cyan;
-    else if(color1 == Qt::red && color2 == Qt::yellow)
-        return red_yellow;
-    else if(color1 == Qt::red && color2 == Qt::green)
-        return red_green;
-    else if(color1 == Qt::blue && color2 == Qt::blue)
-        return blue_blue;
-    else if(color1 == Qt::blue && color2 == Qt::cyan)
-        return blue_cyan;
-    else if(color1 == Qt::blue && color2 == Qt::green)
-        return blue_green;
-    else if(color1 == Qt::blue && color2 == Qt::yellow)
-        return blue_yellow;
-    else if(color1 == Qt::cyan && color2 == Qt::cyan)
-        return cyan_cyan;
-    else if(color1 == Qt::cyan && color2 == Qt::green)
-        return cyan_green;
-    else if(color1 == Qt::cyan && color2 == Qt::yellow)
-        return cyan_yellow;
-    else if(color1 == Qt::green && color2 == Qt::green)
-        return green_green;
-    else if(color1 == Qt::green && color2 == Qt::yellow)
-        return green_yellow;
-    else if(color1 == Qt::yellow && color2 == Qt::yellow)
-        return yellow_yellow;
+    int col = GetIndex(color1);
+    int row = GetIndex(color2);
+    //qDebug() << col << row;
+    return rules[row][col];
+}
 
-    return false;
+int ConnectionRule::GetIndex(Qt::GlobalColor color)
+{
+    int ind;
+    switch (color)
+    {
+    case Qt::red:
+    {
+        ind = 0;
+        break;
+    }
+    case Qt::blue:
+    {
+        ind = 1;
+        break;
+    }
+    case Qt::green:
+    {
+        ind = 2;
+        break;
+    }
+    case Qt::cyan:
+    {
+        ind = 3;
+        break;
+    }
+    case Qt::yellow:
+    {
+        ind = 4;
+        break;
+    }
+    default:
+        ind = -1;
+        break;
+    }
+    return ind;
 }

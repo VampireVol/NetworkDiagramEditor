@@ -1,5 +1,6 @@
 #include "addrule.h"
 #include "ui_addrule.h"
+#include "QDebug"
 
 AddRule::AddRule(QWidget *parent) :
     QDialog(parent),
@@ -98,27 +99,27 @@ void AddRule::addRule()
     {
         color_2 = Qt::yellow;
     }
+
 }
 
-int AddRule::getColor_1()
+Qt::GlobalColor AddRule::getColor_1()
 {
-    if(!reject)
-        return color_1;
-    else
-        return 0;
+    return color_1;
 }
 
-int AddRule::getColor_2()
+Qt::GlobalColor AddRule::getColor_2()
 {
-    if(!reject)
-        return color_2;
-    else
-        return 0;
+    return color_2;
 }
 
 bool AddRule::getRule()
 {
     return rule;
+}
+
+bool AddRule::isReject()
+{
+    return reject;
 }
 
 void AddRule::on_reject_clicked()
@@ -130,11 +131,13 @@ void AddRule::on_reject_clicked()
 void AddRule::on_allow_clicked()
 {
     rule = true;
+    addRule();
     AddRule::close();
 }
 
 void AddRule::on_ban_clicked()
 {
     rule = false;
+    addRule();
     AddRule::close();
 }

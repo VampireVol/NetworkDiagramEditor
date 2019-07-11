@@ -20,7 +20,7 @@ void Body::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 {
     QPen pen;
     pen.setColor(Qt::black);
-    pen.setWidth(2);
+    pen.setWidth(isSelected() ? 4 : 2);
     painter->setPen(pen);
     painter->setBrush(Qt::white);
     painter->drawRect(0,0,80,height);
@@ -37,7 +37,9 @@ void Body::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
      * */
 
     this->setPos(mapToScene(event->pos() + m_shiftMouseCoords));
-    emit signalMove(event, m_shiftMouseCoords);
+    auto dx = event->pos().x() - m_previousPosition.x();
+    auto dy = event->pos().y() - m_previousPosition.y();
+    emit signalMove(this, dx, dy);
 }
 
 void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -48,7 +50,10 @@ void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
     //emit equipmentIsPressed();
     m_shiftMouseCoords = this->pos() - mapToScene(event->pos());
     this->setCursor(QCursor(Qt::ClosedHandCursor));
+    m_previousPosition = event->pos();
+    qDebug() << "234";
     Q_UNUSED(event);
+    QGraphicsItem::mousePressEvent(event);
 }
 
 void Body::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

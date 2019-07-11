@@ -9,25 +9,13 @@ public:
     ConnectionRule();
 
 public:
-    void setRule(int color1, int color2, bool rule);
-    bool getRule(int color1, int color2);
+    void SetRule(Qt::GlobalColor color1, Qt::GlobalColor color2, bool rule);
+    bool GetRule(Qt::GlobalColor color1, Qt::GlobalColor color2);
 
 private:
-    bool red_red;
-    bool red_blue;
-    bool red_cyan;
-    bool red_green;
-    bool red_yellow;
-    bool blue_blue;
-    bool blue_cyan;
-    bool blue_green;
-    bool blue_yellow;
-    bool cyan_cyan;
-    bool cyan_green;
-    bool cyan_yellow;
-    bool green_green;
-    bool green_yellow;
-    bool yellow_yellow;
+    int GetIndex(Qt::GlobalColor color);
+    static const int size = 5;
+    bool rules[size][size];
 };
 
 #endif // CONNECTIONRULE_H

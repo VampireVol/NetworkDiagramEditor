@@ -24,10 +24,11 @@ private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    QPointF m_previousPosition;
 
 signals:
     void equipmentIsPressed();
-    void signalMove(QGraphicsSceneMouseEvent *event, QPointF m_shiftMouseCoords);
+    void signalMove(QGraphicsItem *signalOwner, qreal dx, qreal dy);
 };
 
 #endif // BODY_H

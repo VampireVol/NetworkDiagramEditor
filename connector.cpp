@@ -38,6 +38,15 @@ int Connector::type() const
     return Type;
 }
 
+bool Connector::IsNull()
+{
+    return link == nullptr ? true : false;
+}
+
+void Connector::SetLink(Connector *forLink)
+{
+    link = forLink;
+}
 
 ConnectorRed::ConnectorRed()
     : Connector (Qt::red)

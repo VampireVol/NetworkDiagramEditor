@@ -39,7 +39,7 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 public slots:
-    void slotMove(QGraphicsSceneMouseEvent *event, QPointF m_shiftMouseCoords);
+    //void slotMove(QGraphicsSceneMouseEvent *event, QPointF m_shiftMouseCoords);
 private:
     unsigned int m_flags;
     QPointF m_previousPosition;

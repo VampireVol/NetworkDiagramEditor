@@ -20,6 +20,8 @@ public:
         Type = UserType + 10
     };
     int type() const override;
+    bool IsNull();
+    void SetLink(Connector *forLink);
 private:
     Qt::GlobalColor color;
     Connector *link;

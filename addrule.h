@@ -16,10 +16,10 @@ public:
     ~AddRule();
 
 public:
-    int getColor_1();
-    int getColor_2();
+    Qt::GlobalColor getColor_1();
+    Qt::GlobalColor getColor_2();
     bool getRule();
-
+    bool isReject();
 private slots:
     void on_listWidget_itemClicked();
 
@@ -40,8 +40,8 @@ private:
     QString color1;
     QString color2;
     bool reject;
-    int color_1;
-    int color_2;
+    Qt::GlobalColor color_1;
+    Qt::GlobalColor color_2;
     bool rule;
 };
 
