@@ -62,7 +62,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushAddObj">
+                  <widget class="QPushButton" name="pushAddEquipment">
                    <property name="text">
                     <string>Добавить объект</string>
                    </property>
@@ -73,9 +73,9 @@
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout">
                  <item>
-                  <widget class="QPushButton" name="pushDeleteConn">
+                  <widget class="QPushButton" name="pushAddConn">
                    <property name="text">
-                    <string>Удалить связь</string>
+                    <string>Создать связь</string>
                    </property>
                   </widget>
                  </item>
@@ -89,13 +89,6 @@
                 </layout>
                </item>
               </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushAddConn">
-               <property name="text">
-                <string>Создать связь</string>
-               </property>
-              </widget>
              </item>
              <item>
               <widget class="QTextEdit" name="descriprion"/>

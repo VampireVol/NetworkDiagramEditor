@@ -5,13 +5,14 @@
 #include<body.h>
 #include<connector.h>
 
+///Класс, содержащий тело и коннекторы оборудования
 class EquipmentRender
 {
 public:
-    EquipmentRender(QVector <Connector*> connectors);
+    EquipmentRender(QVector <Connector*> connectors); /// инициализация тела и коннекторов
 
-    Body *body;
-    QVector <Connector*> connectors;
+    Body *body; ///тело объекта
+    QVector <Connector*> connectors; ///коннекторы объекта
 };
 
 #endif // EQUIPMENTRENDER_H

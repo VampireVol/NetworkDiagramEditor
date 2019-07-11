@@ -16,6 +16,16 @@ Qt::GlobalColor Connector::GetColor()
     return color;
 }
 
+void Connector::SetLink(Connector *connector)
+{
+    link = connector;
+}
+
+Connector* Connector::GetLink()
+{
+    return link;
+}
+
 QRectF Connector::boundingRect() const
 {
     return QRectF (0,0,20,20);
@@ -41,11 +51,6 @@ int Connector::type() const
 bool Connector::IsNull()
 {
     return link == nullptr ? true : false;
-}
-
-void Connector::SetLink(Connector *forLink)
-{
-    link = forLink;
 }
 
 ConnectorRed::ConnectorRed()

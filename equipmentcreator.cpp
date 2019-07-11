@@ -8,15 +8,15 @@ EquipmentCreator::EquipmentCreator(QWidget *parent) :
     ui(new Ui::EquipmentCreator)
 {
     ui->setupUi(this);
-    QListWidgetItem *itemRed = new QListWidgetItem(QIcon(":/img/red_out.png"), "Красный коннектор");
+    QListWidgetItem *itemRed = new QListWidgetItem(QIcon(":/img/red_out.png"), "USB");
     ui->listWidgetConnectors->addItem(itemRed);
-    QListWidgetItem *itemBlue = new QListWidgetItem(QIcon(":/img/blue_out.png"), "Синий коннектор");
+    QListWidgetItem *itemBlue = new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI");
     ui->listWidgetConnectors->addItem(itemBlue);
-    QListWidgetItem *itemGreen = new QListWidgetItem(QIcon(":/img/green_out.png"), "Зеленый коннектор");
+    QListWidgetItem *itemGreen = new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA");
     ui->listWidgetConnectors->addItem(itemGreen);
-    QListWidgetItem *itemCyan = new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Голубой коннектор");
+    QListWidgetItem *itemCyan = new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet");
     ui->listWidgetConnectors->addItem(itemCyan);
-    QListWidgetItem *itemYellow = new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Желтый коннектор");
+    QListWidgetItem *itemYellow = new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm");
     ui->listWidgetConnectors->addItem(itemYellow);
 
     QRegExp exp("[a-zA-Z]{1,9}[1-9]{0,2}");
@@ -48,23 +48,23 @@ void EquipmentCreator::on_pushButtonCreate_clicked()
     while (QListWidgetItem *item = ui->listWidgetEquipment->takeItem(0))
     {
         str = item->text();
-        if(str == "Красный коннектор")
+        if(str == "USB")
         {
             connectors.push_back(new ConnectorRed());
         }
-        else if (str == "Синий коннектор")
+        else if (str == "HDMI")
         {
             connectors.push_back(new ConnectorBlue());
         }
-        else if (str == "Зеленый коннектор")
+        else if (str == "VGA")
         {
             connectors.push_back(new ConnectorGreen());
         }
-        else if (str == "Голубой коннектор")
+        else if (str == "Internet")
         {
             connectors.push_back(new ConnectorCyan());
         }
-        else if (str == "Желтый коннектор")
+        else if (str == "Mini jack 3.5 mm")
         {
             connectors.push_back(new ConnectorYellow());
         }

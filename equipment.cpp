@@ -19,6 +19,7 @@ void Equipment::SetId(int &nextEquipmentId)
 {
     int nextConnectorId = 1;
     equipmentId = nextEquipmentId++;
+    render->body->setId(equipmentId);
     int connectorSize = render->connectors.size();
     for(int i = 0; i < connectorSize; ++i)
     {
@@ -75,6 +76,8 @@ Equipment* Equipment::CreateCopy(Equipment *equipment)
     {
         copy->render->connectors[i]->connectorId = equipment->render->connectors[i]->connectorId;
         copy->render->connectors[i]->equipmentId = copy->equipmentId;
+        if(!equipment->render->connectors[i]->IsNull())
+            copy->render->connectors[i]->SetLink(equipment->render->connectors[i]->GetLink());
     }
 
     return copy;

@@ -8,15 +8,16 @@ namespace Ui {
 class ProjectName;
 }
 
+/// Класс, отвечающий за ввод названия проекта
 class ProjectName : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ProjectName(QWidget *parent = nullptr);
-    ~ProjectName();
+    explicit ProjectName(QWidget *parent = nullptr); /// Инициализация диалогового окна
+    ~ProjectName(); /// Деструктор класса
 public:
-    QString projectName();
+    QString projectName(); /// возврат названия проекта
 
 private slots:
     void on_buttonBox_accepted();

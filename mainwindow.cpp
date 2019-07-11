@@ -12,6 +12,7 @@
 #include "connector.h"
 #include "vepolyline.h"
 #include "dotsignal.h"
+#include "body.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,20 +20,23 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //scene->hasFocus()
-    ui->pushAddObj->setEnabled(false);
-    ui->pushDeleteObj->setEnabled(false);
-    ui->pushDeleteConn->setEnabled(false);
     ui->open_equipment_creator->setEnabled(false);
-    ui->add_delete_equipment->setEnabled(false);
+    //ui->add_delete_equipment->setEnabled(false);
+    ui->pushAddEquipment->setEnabled(false);
+    ui->pushDeleteObj->setEnabled(false);
     ui->add_connection->setEnabled(false);
+    ui->pushAddConn->setEnabled(false);
+    ui->pushAddDescription->setEnabled(false);
     ui->save->setEnabled(false);
     ui->save_as->setEnabled(false);
-    ui->pushAddDescription->setEnabled(false);
-    //ui->pushAddConn->setEnabled(false);
     scene = new QGraphicsScene();
-    connectionRule = new ConnectionRule(); //ВРЕМЕННО!!!!
+    connect(scene, SIGNAL(selectionChanged()), this, SLOT(enable_pushDeleteObj()));
+    connect(scene, SIGNAL(selectionChanged()), this, SLOT(ennable_pushAddConn()));
+    connect(scene, SIGNAL(selectionChanged()), this, SLOT(enable_pushAddDescription()));
     ui->graphicsView->setScene(scene);
     mainPath = FileOrganizer::currentPath();//"V:/study/QtProjects/build-DiagramNetworkEditor-Desktop_Qt_5_13_0_MSVC2017_64bit-Release";
+    connectionRule = new ConnectionRule;
+    nextPolylineId = 1;
 }
 
 MainWindow::~MainWindow()
@@ -43,7 +47,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_create_triggered()
 {
     ui->statusBar->showMessage("Создать проект");
-    ui->pushAddObj->setEnabled(false);
     ProjectName windowProjectName;
     windowProjectName.setModal(true);
     windowProjectName.exec();
@@ -64,9 +67,12 @@ void MainWindow::on_create_triggered()
                 ui->save->setEnabled(true);
                 ui->save_as->setEnabled(true);
                 ui->open_equipment_creator->setEnabled(true);
-                ui->add_delete_equipment->setEnabled(true);
                 ui->add_connection->setEnabled(true);
-                connectionRule = new ConnectionRule();
+                ui->pushAddEquipment->setEnabled(false);
+                ui->pushDeleteObj->setEnabled(false);
+                ui->pushAddConn->setEnabled(false);
+                ui->pushAddDescription->setEnabled(false);
+                connectionRule = new ConnectionRule;
                 equipmentsInProject.clear();
                 equipmentsInLibrary.clear();
                 equipmentsOnScene.clear();
@@ -74,6 +80,7 @@ void MainWindow::on_create_triggered()
                 foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInLibrary())
                     equipmentsInLibrary.push_back(Equipment::CreateCopy(equipmet));
                 ui->listWidget->clear();
+                ui->descriprion->clear();
                 scene->clear();
                 break;
             }
@@ -112,13 +119,16 @@ void MainWindow::on_open_triggered()
         case 0:
         {
             QMessageBox::information(this, "Ура:)", "Проект успешно открыт");
-            ui->pushAddObj->setEnabled(false);
             ui->save->setEnabled(true);
             ui->save_as->setEnabled(true);
             ui->open_equipment_creator->setEnabled(true);
-            ui->add_delete_equipment->setEnabled(true);
             ui->add_connection->setEnabled(true);
+            ui->pushAddEquipment->setEnabled(false);
+            ui->pushDeleteObj->setEnabled(false);
+            ui->pushAddConn->setEnabled(false);
+            ui->pushAddDescription->setEnabled(false);
             ui->listWidget->clear();
+            ui->descriprion->clear();
             equipmentsInProject.clear();
             equipmentsInLibrary.clear();
             equipmentsOnScene.clear();
@@ -134,7 +144,6 @@ void MainWindow::on_open_triggered()
             foreach(Equipment *equipmet, fileOrganizer->getEquipmentsInScheme())
             {
                 equipmentsOnScene.push_back(Equipment::CreateCopy(equipmet));
-                //connect(equipmentsOnScene.last()->render->body, SIGNAL(equipmentIsSelected()), this, SLOT(showDescription()));
             }
 
             if(!equipmentsInProject.isEmpty())
@@ -149,9 +158,11 @@ void MainWindow::on_open_triggered()
                     //equipment->setText(equipment->name);
                     QString text = QString("id: %1").arg(equipment->equipmentId);
                     equipment->labelId = new QLabel(text);
+                    equipment->render->body->setId(equipment->equipmentId);
                     QGraphicsProxyWidget* proxyWidget = new QGraphicsProxyWidget(equipment->render->body);
                     //тут можно поиграться с отображением
                     proxyWidget->setWidget(equipment->labelId);
+                    connect(equipment->render->body, SIGNAL(equipmentIsSelected(int)), this, SLOT(showDescription(int)));
                     scene->addItem(equipment->render->body);
                 }
                 nextEquipmentId = equipmentsOnScene.last()->equipmentId + 1;
@@ -257,6 +268,10 @@ void MainWindow::on_add_delete_equipment_triggered()
                 delete item;
             }
         }
+
+        if(ui->listWidget->count() == 0)
+            ui->pushAddEquipment->setEnabled(false);
+
         for(int i = 0; i < equipmentsInLibrary.size(); i++)
         {
             if(!Equipment::Contains(window.getEquipmentsInLibrary(), equipmentsInLibrary[i]))
@@ -270,7 +285,7 @@ void MainWindow::on_add_delete_equipment_triggered()
 
 void MainWindow::on_listWidget_itemClicked()
 {
-    ui->pushAddObj->setEnabled(true);
+    ui->pushAddEquipment->setEnabled(true);
 }
 
 void MainWindow::on_pushAddObj_clicked()
@@ -287,8 +302,8 @@ void MainWindow::on_pushAddObj_clicked()
     //тут можно поиграться с отображением
     proxyWidget->setWidget(copy->labelId);
     equipmentsOnScene.push_back(copy);
-    //connect(equipmentsOnScene.last()->render->body, SIGNAL(equipmentIsSelected()), this, SLOT(showDescription()));
-    scene->addItem(copy->render->body);
+    connect(equipmentsOnScene.last()->render->body, SIGNAL(equipmentIsSelected(int)), this, SLOT(showDescription(int)));
+    scene->addItem(equipmentsOnScene.last()->render->body);
 }
 
 void MainWindow::on_listWidget_itemDoubleClicked()
@@ -298,18 +313,10 @@ void MainWindow::on_listWidget_itemDoubleClicked()
 
 void MainWindow::on_pushDeleteObj_clicked()
 {
-    //Удаление выделенного объекта и связи с другими объектами
-}
+    /*if (scene->selectedItems().size() == 1 && scene->selectedItems().first()->type() == Connector::Type)
+    {
 
-void MainWindow::on_pushDeleteConn_clicked()
-{
-    //удаление выделенной связи
-}
-
-void MainWindow::on_delete_equipment_triggered()
-{
-    //equipmentsOnScene.remove();
-    //scene->removeItem();
+    }*/
 }
 
 void MainWindow::on_save_as_triggered()
@@ -349,13 +356,8 @@ void MainWindow::on_save_as_triggered()
 
 void MainWindow::on_pushAddConn_clicked()
 {
-    if (scene->selectedItems().size() == 2 &&
-            scene->selectedItems().first()->type() == Connector::Type &&
-            scene->selectedItems().last()->type() == Connector::Type)
-    {
         Connector *first = qgraphicsitem_cast<Connector*>(scene->selectedItems().first());
         Connector *end = qgraphicsitem_cast<Connector*>(scene->selectedItems().last());
-        //qDebug() << first->equipmentId << " " << end->equipmentId;
         if (first->equipmentId != end->equipmentId)
         {
             if (first->IsNull() && end->IsNull())
@@ -365,16 +367,17 @@ void MainWindow::on_pushAddConn_clicked()
                 {
                     Equipment *firstEq = nullptr;
                     Equipment *endEq = nullptr;
-                    for(int i = 0; i < equipmentsOnScene.size(); ++i)
+                    first->SetLink(end);
+                    end->SetLink(first);
+                    foreach(Equipment *equipment, equipmentsOnScene)
                     {
-                        if(equipmentsOnScene[i]->equipmentId == first->equipmentId)
+                        if(equipment->equipmentId == first->equipmentId)
                         {
-                            firstEq = equipmentsOnScene[i];
-
+                            firstEq = equipment;
                         }
-                        else if(equipmentsOnScene[i]->equipmentId == end->equipmentId)
+                        else if(equipment->equipmentId == end->equipmentId)
                         {
-                            endEq = equipmentsOnScene[i];
+                            endEq = equipment;
                         }
 
                     }
@@ -384,9 +387,11 @@ void MainWindow::on_pushAddConn_clicked()
                     QPointF fixPos;
                     fixPos.setX(10);
                     fixPos.setY(10);
+
                     path.moveTo(firstEq->render->body->pos() + first->pos() + fixPos);
                     path.lineTo(endEq->render->body->pos() + end->pos() + fixPos);
                     scene->addItem(polyline);
+                    connections.push_back(polyline);
                     polyline->setPath(path);
                     QPen pen;
                     pen.setWidth(2);
@@ -394,27 +399,23 @@ void MainWindow::on_pushAddConn_clicked()
                     polyline->setZValue(-1);
                     first->SetLink(end);
                     end->SetLink(first);
+                    polyline->SetId(nextPolylineId);
+                    connect(polyline, SIGNAL(polylineIsSelected(int)), this, SLOT(showDescriptionPolyline(int)));
                 }
                 else
                 {
-                    ui->statusBar->showMessage("Совершается запрещенное соединение!");
+                    QMessageBox::warning(this, "Внимание", "Данное соединение запрещено");
                 }
             }
             else
             {
-                ui->statusBar->showMessage("Один из коннекторов уже связан");
+                QMessageBox::warning(this, "Внимание", "Один из коннекторов уже соединен");
             }
         }
         else
         {
-            ui->statusBar->showMessage("Связь коннекторов одного оборудования запрещена!");
+            QMessageBox::warning(this, "Внимание", "Данное соединение запрещено");
         }
-
-    }
-    else
-    {
-        ui->statusBar->showMessage("Для добовления выделете два коннектора через Ctrl");
-    }
 }
 
 void MainWindow::on_add_connection_triggered()
@@ -425,25 +426,101 @@ void MainWindow::on_add_connection_triggered()
     window.exec();
     if(!window.isReject())
         connectionRule->SetRule(window.getColor_1(), window.getColor_2(), window.getRule());
-    qDebug() << "123";
 }
 
-void MainWindow::showDescription(Equipment *equipment)
+void MainWindow::showDescription(int equipmentId)
 {
-    /*ui->descriprion->clear();
+    ui->descriprion->clear();
     QString text;
-    foreach(Connector *connector, equipment->render->connectors)
+    foreach(Connector *connector, equipmentsOnScene[equipmentId - 1]->render->connectors)
     {
-        text += "тип: "connector->type + ", id: " + connector->connectorId + '\n';
+        text = text + "тип: " + getConnectorType(connector->GetColor()) + ", id: " + QString::number(connector->connectorId) + '\n';
     }
-    ui->descriprion->setText("Название: " + equipment->name + '\n' +
-                             "id: " + equipment->equipmentId + '\n' +
-                             "Коннекторы:\n" + text);   */
+    text = "Название: " + equipmentsOnScene[equipmentId - 1]->name + '\n' +
+            "id: " + QString::number(equipmentsOnScene[equipmentId - 1]->equipmentId) + '\n' +
+            "Коннекторы:\n" + text;
+    ui->descriprion->setText(text);
+}
+
+void MainWindow::showDescriptionPolyline(int polylineId)
+{
+    //int firstIdEquipment = connections[polylineId - 1]->first->id;
+    //int secondIdEquipment = connections[polylineId - 1]->first->id;
+    //Equipment *first, *second;
+    ui->descriprion->clear();
+    QString text = "Описание: " + connections[polylineId - 1]->GetDescription() + '\n' +
+            "id: " + QString::number(connections[polylineId - 1]->polylineId) + '\n' +
+            "Соединяет:\n" +
+            "Оборудование #1: " + '\n' +
+            "Оборудование #2: " + '\n';
+    ui->descriprion->setText(text);
+}
+
+QString MainWindow::getConnectorType(int color)
+{
+    switch(color)
+    {
+    case Qt::red:
+    {
+        return "USB";
+    }
+    case Qt::blue:
+    {
+        return "HDMI";
+    }
+    case Qt::green:
+    {
+        return "VGA";
+    }
+    case Qt::cyan:
+    {
+        return "Enternet";
+    }
+    case Qt::yellow:
+    {
+        return "Mini jack 3.5 mm";
+    }
+    default:
+    {
+        return "Неизвестно";
+    }
+    }
 }
 
 void MainWindow::on_pushAddDescription_clicked()
 {
+    ui->pushDeleteObj->setEnabled(true);
     AddDescription window;
     window.setModal(true);
     window.exec();
+}
+
+void MainWindow::enable_pushDeleteObj()
+{
+    if((scene->selectedItems().size() == 1 && scene->selectedItems().first()->type() == Body::Type) ||
+            (scene->selectedItems().size() == 1 && scene->selectedItems().first()->type() == VEPolyline::Type))
+        ui->pushDeleteObj->setEnabled(true);
+    else {
+        ui->pushDeleteObj->setEnabled(false);
+    }
+}
+
+void MainWindow::ennable_pushAddConn()
+{
+    if (scene->selectedItems().size() == 2 &&
+            scene->selectedItems().first()->type() == Connector::Type &&
+            scene->selectedItems().last()->type() == Connector::Type)
+        ui->pushAddConn->setEnabled(true);
+    else {
+        ui->pushAddConn->setEnabled(false);
+    }
+}
+
+void MainWindow::enable_pushAddDescription()
+{
+    if(scene->selectedItems().size() == 1 && scene->selectedItems().first()->type() == VEPolyline::Type)
+        ui->pushAddDescription->setEnabled(true);
+    else {
+        ui->pushAddDescription->setEnabled(false);
+    }
 }

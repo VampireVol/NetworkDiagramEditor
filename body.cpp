@@ -11,6 +11,16 @@ Body::~Body()
 
 }
 
+int Body::type() const
+{
+    return Type;
+}
+
+void Body::setId(int id)
+{
+    this->id = id;
+}
+
 QRectF Body::boundingRect() const
 {
     return QRectF (0,0,80,height);
@@ -47,11 +57,10 @@ void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
     /* При нажатии мышью на графический элемент
      * заменяем курсор на руку, которая держит этот элемента
      * */
-    //emit equipmentIsPressed();
+    emit equipmentIsSelected(id);
     m_shiftMouseCoords = this->pos() - mapToScene(event->pos());
     this->setCursor(QCursor(Qt::ClosedHandCursor));
     m_previousPosition = event->pos();
-    qDebug() << "234";
     Q_UNUSED(event);
     QGraphicsItem::mousePressEvent(event);
 }

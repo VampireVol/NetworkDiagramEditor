@@ -90,14 +90,3 @@ void DotSignal::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event)
     setBrush(QBrush(Qt::black));
 }
-
-/*void DotSignal::slotMove(QGraphicsSceneMouseEvent *event, QPointF m_shiftMouseCoords)
-{
-    qDebug() << "123";
-    auto dx = event->scenePos().x() - m_shiftMouseCoords.x();
-    auto dy = event->scenePos().y() - m_shiftMouseCoords.y();
-    moveBy(dx,dy);
-    setPreviousPosition(event->scenePos());
-    emit signalMove(this, dx, dy);
-
-}*/

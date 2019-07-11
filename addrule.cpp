@@ -12,21 +12,16 @@ AddRule::AddRule(QWidget *parent) :
     reject = false;
     listWidget_1_clicked = false;
     listWidget_2_clicked = false;
-    //QListWidgetItem *itemRed = new QListWidgetItem(QIcon(":/img/red_out.png"), "Красный коннектор");
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "Красный коннектор"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "Красный коннектор"));
-    //QListWidgetItem *itemBlue = new QListWidgetItem(QIcon(":/img/blue_out.png"), "Синий коннектор");
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "Синий коннектор"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "Синий коннектор"));
-    //QListWidgetItem *itemGreen = new QListWidgetItem(QIcon(":/img/green_out.png"), "Зеленый коннектор");
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "Зеленый коннектор"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "Зеленый коннектор"));
-    //QListWidgetItem *itemCyan = new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Голубой коннектор");
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Голубой коннектор"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Голубой коннектор"));
-    //QListWidgetItem *itemYellow = new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Желтый коннектор");
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Желтый коннектор"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Желтый коннектор"));
+    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "USB"));
+    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "USB"));
+    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI"));
+    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI"));
+    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA"));
+    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA"));
+    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet"));
+    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet"));
+    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm"));
+    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm"));
 }
 
 AddRule::~AddRule()
@@ -58,44 +53,44 @@ void AddRule::on_listWidget_2_itemClicked()
 
 void AddRule::addRule()
 {
-    if(color1 == "Красный коннектор")
+    if(color1 == "USB")
     {
         color_1 = Qt::red;
     }
-    else if (color1 == "Синий коннектор")
+    else if (color1 == "HDMI")
     {
         color_1 = Qt::blue;
     }
-    else if (color1 == "Зеленый коннектор")
+    else if (color1 == "VGA")
     {
         color_1 = Qt::green;
     }
-    else if (color1 == "Голубой коннектор")
+    else if (color1 == "Internet")
     {
         color_1 = Qt::cyan;
     }
-    else if (color1 == "Желтый коннектор")
+    else if (color1 == "Mini jack 3.5 mm")
     {
         color_1 = Qt::yellow;
     }
 
-    if(color2 == "Красный коннектор")
+    if(color2 == "USB")
     {
         color_2 = Qt::red;
     }
-    else if (color2 == "Синий коннектор")
+    else if (color2 == "HDMI")
     {
         color_2 = Qt::blue;
     }
-    else if (color2 == "Зеленый коннектор")
+    else if (color2 == "VGA")
     {
         color_2 = Qt::green;
     }
-    else if (color2 == "Голубой коннектор")
+    else if (color2 == "Internet")
     {
         color_2 = Qt::cyan;
     }
-    else if (color2 == "Желтый коннектор")
+    else if (color2 == "Mini jack 3.5 mm")
     {
         color_2 = Qt::yellow;
     }

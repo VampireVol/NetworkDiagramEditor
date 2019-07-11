@@ -7,7 +7,7 @@
 #include "dotsignal.h"
 
 VEPolyline::VEPolyline(Body *first, Body *end, QObject *parent) :
-    QObject(parent), first(first), end(end)
+    QObject(parent), first(first), end(end), polylineId(0)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -18,6 +18,11 @@ VEPolyline::VEPolyline(Body *first, Body *end, QObject *parent) :
 VEPolyline::~VEPolyline()
 {
 
+}
+
+int VEPolyline::type() const
+{
+    return Type;
 }
 
 QPointF VEPolyline::previousPosition() const
@@ -37,6 +42,27 @@ void VEPolyline::setPreviousPosition(const QPointF previousPosition)
 void VEPolyline::setPath(const QPainterPath &path)
 {
     QGraphicsPathItem::setPath(path);
+}
+
+void VEPolyline::SetId(int &nextPolylineId)
+{
+    polylineId = nextPolylineId++;
+}
+
+void VEPolyline::SetDescription(QString text)
+{
+    description = text;
+}
+
+QString VEPolyline::GetDescription()
+{
+    return description;
+}
+
+void VEPolyline::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    emit polylineIsSelected(polylineId);
+    QGraphicsItem::mousePressEvent(event);
 }
 
 void VEPolyline::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -108,25 +134,27 @@ void VEPolyline::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
     QPainterPath linePath = path();
     if (signalOwner == first)
-    {
-        QPointF pathPoint = linePath.elementAt(0);
-        linePath.setElementPositionAt(0, pathPoint.x() + dx, pathPoint.y() + dy);
-    }
-    else if (signalOwner == end)
-    {
-        QPointF pathPoint = linePath.elementAt(linePath.elementCount() - 1);
-        linePath.setElementPositionAt(linePath.elementCount() - 1, pathPoint.x() + dx, pathPoint.y() + dy);
-    }
-    else
-    {
-        for(int i = 0; i < linePath.elementCount(); i++){
-            if(listDotes.at(i) == signalOwner){
-                QPointF pathPoint = linePath.elementAt(i);
-                linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
-                m_pointForCheck = i;
-            }
+        {
+            QPointF pathPoint = linePath.elementAt(0);
+            linePath.setElementPositionAt(0, pathPoint.x() + dx, pathPoint.y() + dy);
         }
-    }
+        else if (signalOwner == end)
+        {
+            QPointF pathPoint = linePath.elementAt(linePath.elementCount() - 1);
+            linePath.setElementPositionAt(linePath.elementCount() - 1, pathPoint.x() + dx, pathPoint.y() + dy);
+        }
+        else
+        {
+            for(int i = 0; i < linePath.elementCount(); i++)
+            {
+                if(listDotes.at(i) == signalOwner)
+                {
+                    QPointF pathPoint = linePath.elementAt(i);
+                    linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
+                    m_pointForCheck = i;
+                }
+             }
+         }
     setPath(linePath);
 }
 
@@ -178,6 +206,7 @@ void VEPolyline::updateDots()
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         QPointF point = linePath.elementAt(i);
+
         DotSignal *dot = new DotSignal(point, this);
         connect(dot, &DotSignal::signalMove, this, &VEPolyline::slotMove);
         connect(dot, &DotSignal::signalMouseRelease, this, &VEPolyline::checkForDeletePoints);

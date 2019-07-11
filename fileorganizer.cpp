@@ -210,7 +210,15 @@ bool FileOrganizer::saveScheme(QVector<Equipment *> equipmentsInScheme)
             xmlWriter.writeAttribute("id", QString::number(connector->connectorId));
             xmlWriter.writeAttribute("color", QString::number(connector->GetColor()));
             xmlWriter.writeStartElement("link");
-            //Информация о связи
+            /*if(!connector->IsNull())
+            {
+                xmlWriter.writeAttribute("eq_id", QString::number(connector->GetLink()->equipmentId));
+                xmlWriter.writeAttribute("conn_id", QString::number(connector->GetLink()->connectorId));
+            }
+            else {
+                xmlWriter.writeAttribute("eq_id", QString::number(0));
+                xmlWriter.writeAttribute("conn_id", QString::number(0));
+            }*/
             xmlWriter.writeEndElement();
             xmlWriter.writeEndElement();
         }
@@ -325,6 +333,10 @@ bool FileOrganizer::openScheme()
         QVector <Connector*> connectors;
         QVector <int> colors;
         QVector <int> identificators;
+        QVector <int> linkConnIdentificators;
+        QVector <int> linkEqIdentificators;
+        QVector <QVector <int>> allLinkConnId;
+        QVector <QVector <int>> allLinkEqId;
         int equipmentId;
         while(!xmlReader.atEnd())
         {
@@ -352,16 +364,16 @@ bool FileOrganizer::openScheme()
                                 else if(attr.name().toString() == "color")
                                     colors.push_back(attr.value().toInt());
                             }
-                            //xmlReader.readNext();
-                            /*if(xmlReader.name() == "link")
+                            /*while(xmlReader.name() != "link")
+                                xmlReader.readNext();
+                            if(xmlReader.name() == "link")
                             {
-                                if(xmlReader.isStartElement())
+                                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes())
                                 {
-                                    //считываем связь
-                                    xmlReader.readNext();
-                                }
-                                else {
-                                    xmlReader.readNext();
+                                    if(attr.name().toString() == "conn_id")
+                                        linkConnIdentificators.push_back(attr.value().toInt());
+                                    else if(attr.name().toString() == "eq_id")
+                                        linkEqIdentificators.push_back(attr.value().toInt());
                                 }
                             }*/
                         }
@@ -378,9 +390,25 @@ bool FileOrganizer::openScheme()
                     equipment->render->connectors[i]->equipmentId = equipmentId;
                 }
                 equipmentsInScheme.push_back(equipment);
+                allLinkEqId.push_back(linkEqIdentificators);
+                allLinkConnId.push_back(linkConnIdentificators);
             }
             xmlReader.readNext();
         }
+
+        for(int i = 0; i < equipmentsInScheme.size(); i++)
+        {
+            for(int j = 0; j < allLinkEqId[i].size(); j++)
+            {
+                if(allLinkEqId[i][j] != 0)
+                {
+                    int connId = allLinkConnId[i][j];
+                    int eqId = allLinkEqId[i][j];
+                    equipmentsInScheme[i]->render->connectors[j]->SetLink(equipmentsInScheme[eqId]->render->connectors[connId]);
+                }
+            }
+        }
+
         file.close();
     }
 

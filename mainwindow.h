@@ -5,18 +5,20 @@
 #include "equipment.h"
 #include "fileorganizer.h"
 #include "connectionrule.h"
+#include "vepolyline.h"
 
 namespace Ui {
 class MainWindow;
 }
 
+/// Основное окно проекта
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget *parent = nullptr); /// инициализация объектов в MainWindow
+    ~MainWindow(); // Деструктор класса, удаление ui
 
 private slots:
     void on_open_equipment_creator_triggered();
@@ -39,20 +41,26 @@ private slots:
 
     void on_pushDeleteObj_clicked();
 
-    void on_pushDeleteConn_clicked();
-
-    void on_delete_equipment_triggered();
-
     void on_save_as_triggered();
 
     void on_add_connection_triggered();
 
-private slots:
-    void showDescription(Equipment *equipment);
+    void showDescription(int equipmentId);
+
+    void showDescriptionPolyline(int polylineId);
 
     void on_pushAddDescription_clicked();
 
     void on_pushAddConn_clicked();
+
+    void enable_pushDeleteObj();
+
+    void ennable_pushAddConn();
+
+    void enable_pushAddDescription();
+
+private:
+    QString getConnectorType(int color);
 
 private:
     Ui::MainWindow *ui;
@@ -61,9 +69,11 @@ private:
     QVector <Equipment*> equipmentsInLibrary;
     QVector <Equipment*> equipmentsOnScene;
     int nextEquipmentId;
+    int nextPolylineId;
     FileOrganizer *fileOrganizer;
     QString mainPath;
     ConnectionRule *connectionRule;
+    QVector <VEPolyline*> connections;
 };
 
 #endif // MAINWINDOW_H
