@@ -8,25 +8,36 @@
 #include <QLabel>
 #include <QGraphicsProxyWidget>
 
-/// Класс, описывающий оборудование
+/**
+ * Класс описывает оборудование
+ */
+
 class Equipment : public QListWidgetItem
 {
 public:
-    Equipment(QVector <Connector*> connectors); /// Инициализация стандартными значениями переменных и создание нового экземпляра EquipmentRender (содержится тело и коннекторы)
-    ~Equipment(); /// деструктор класса, удаление экземпляра EquipmentRender
+    /*инициализация стандартными значениями переменных и
+      создание нового экземляра EguipmentRender, в котором содержится тело и коннекторы.*/
+    Equipment(QVector <Connector*> connectors);
+    ~Equipment();
 
 public:
-    QLabel *labelId; ///вывод ID оборудования
-    QString name; /// имя оборудования
-    int equipmentId; /// ID оборудования
-    EquipmentRender *render; /// Тело и коннекторы
+    void set_id(const int &nextEquipmentId);// устанавливает id оборудования
+    int get_equipmentId() const;// возвращает id оборудования
+    void set_name(const QString &name);// устанавливает название оборудования
+    QString get_name() const;// возвращает название оборудования
+    void set_description(QString text);// устанавливает описание оборудования
+    QString get_description();// возвращает описание оборудования
+    EquipmentRender* get_render() const;// возвращает "render"
 
-public:
-    void SetId(int &nextEquipmentId); /// Установка ID оборудования
+    static Equipment* create_copy(Equipment *equipment);// создает копию оборудования
+    // вспомогательная функция, которыя проверяет наличие элемента в векторе
+    static bool contains(const QVector <Equipment*> &equipments, const QString &name);
 
-public:
-    static Equipment* CreateCopy(Equipment *equipment); /// Создание копии оборудования
-    static bool Contains(QVector <Equipment*> equipments, Equipment *equipment); /// Проверка, есть ли оборудование в векторе
+private:
+    QString name;
+    QString description;
+    int equipmentId;
+    EquipmentRender *render;// экземляр EguipmentRender, в котором содержится тело и коннекторы
 };
 
 #endif // EQUIPMENT_H

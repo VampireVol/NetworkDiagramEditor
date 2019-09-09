@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>304</width>
+    <width>363</width>
     <height>120</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
-    <normaloff>:/img/create new.png</normaloff>:/img/create new.png</iconset>
+    <normaloff>:/rec/img/create new.png</normaloff>:/rec/img/create new.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

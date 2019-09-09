@@ -8,42 +8,45 @@ namespace Ui {
 class EquipmentCreator;
 }
 
-///Класс, описывающий создание оборудования
+/**
+ * Класс описывает создание оборудования
+ */
+
 class EquipmentCreator : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit EquipmentCreator(QWidget *parent = nullptr); /// конструктор окна, создание ui
-    ~EquipmentCreator(); /// деструктор класса, удаление ui
-    Equipment* CreateEquipment(); /// функция создания экземлпяра оборудования
+    //добавляет в виджет созданные коннекторы
+    explicit EquipmentCreator(const QVector<Connector*> &connectors_in_project, QWidget *parent = nullptr);
+    ~EquipmentCreator();
+    Equipment* CreateEquipment();// возвращает созданное оборудование
 
 private slots:
-    void on_pushButtonCreate_clicked(); //нажатие на кнопку "создать"
+    void on_pushButtonCreate_clicked();// действия при нажатии "создать"
 
-    void on_pushButtonAdd_clicked(); // нажатие на кнопку "добавить"
+    void on_pushButtonAdd_clicked();// добавление коннектора в оборудование
 
-    void on_pushButtonDel_clicked(); // нажатие на кнопку "удалить"
+    void on_pushButtonDel_clicked();// удаление коннектора из оборудования
 
-    void on_listWidgetConnectors_itemClicked(); // нажатие на объект из виджета
+    void on_listWidgetConnectors_itemClicked();// действия при нажатии на объект виджета 1
 
-    void on_listWidgetEquipment_itemClicked(); // виджет с коннекторами на оборудовании
+    void on_listWidgetEquipment_itemClicked();// действия при нажатии на объект виджета 2
 
-    void on_listWidgetConnectors_itemDoubleClicked(); // двойной клик по 1 виджету
+    void on_listWidgetConnectors_itemDoubleClicked();// действия при двойном клике на объект виджета 1
 
-    void on_listWidgetEquipment_itemDoubleClicked();// двойной клик по 2 виджету
+    void on_listWidgetEquipment_itemDoubleClicked();// действия при двойном клике на объект виджета 2
 
-    void on_pushButtonExit_clicked(); //  нажатие на кнопку "отмена"
+    void on_pushButtonExit_clicked();// выход из редактора
 
-    void on_lineEditName_textChanged(); // реакция на изменение текста
+    void on_lineEditName_textChanged();// действия при изменении текста в названии оборудрвания
 
-    void enable_pushButtonCreate(); // нажатие на кнопку "создать"
-
+    void enable_pushButtonCreate();// действия при нажатии на "создать"
 private:
     Ui::EquipmentCreator *ui;
-    bool listWidgetEquipment_isEmpty;
-    bool equipmentName_isGood;
+    bool listWidgetEquipment_isEmpty = true;// добавлен ли хоть один коннектор
     Equipment *equipment = nullptr;
+    const QVector<Connector*> &connectors_in_project;
 };
 
 #endif // EQUIPMENTCREATOR_H

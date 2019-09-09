@@ -9,31 +9,35 @@ namespace Ui {
 class SelectPath;
 }
 
-/// Класс, описывающий файловый проводник
+/**
+ * Класс описывает файловый проводник
+ */
+
 class SelectPath : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SelectPath(QWidget *parent = nullptr); /// Инициализация диалогового окна
-    ~SelectPath(); /// Деструктор класса
+    //Инициализация окна
+    explicit SelectPath(QWidget *parent = nullptr);
+    ~SelectPath();
 
-    QString getProjectPath(); /// Возврат пути проекта
+    QString get_projectPath();// возвращает путь
 
 private slots:
-    void on_listView_doubleClicked(const QModelIndex &index); //вход в директорию
+    void on_listView_doubleClicked(const QModelIndex &index);// реакция на двойной клик
 
-    void on_buttonBox_accepted();
+    void on_buttonBox_accepted();// принять
 
-    void on_buttonBox_rejected();
+    void on_buttonBox_rejected();// отмена
 
-    void on_listView_clicked(const QModelIndex &index); // выделение директории
+    void on_listView_clicked(const QModelIndex &index);// реакция на клик
 
 private:
+    QString projectPath = nullptr;
     Ui::SelectPath *ui;
     QFileSystemModel *model;
     QModelIndex current;
-    QString projectPath;
 };
 
 #endif // SELECTPATH_H

@@ -7,7 +7,7 @@
 #include "dotsignal.h"
 
 VEPolyline::VEPolyline(Body *first, Body *end, QObject *parent) :
-    QObject(parent), first(first), end(end), polylineId(0)
+    QObject(parent), first(first), end(end), connectionId(0)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -15,9 +15,55 @@ VEPolyline::VEPolyline(Body *first, Body *end, QObject *parent) :
     connect(end, &Body::signalMove, this, &VEPolyline::slotMove);
 }
 
-VEPolyline::~VEPolyline()
+void VEPolyline::set_connectionId(int id)
 {
+    connectionId = id;
+}
 
+int VEPolyline::get_connectionId()
+{
+    return connectionId;
+}
+
+
+void VEPolyline::set_connectorIdFirst(int id)
+{
+    connectorIdFirst = id;
+}
+
+int VEPolyline::get_connectorIdFirst()
+{
+    return connectorIdFirst;
+}
+
+void VEPolyline::set_connectorIdEnd(int id)
+{
+    connectorIdEnd = id;
+}
+
+int VEPolyline::get_connectorIdEnd()
+{
+    return connectorIdEnd;
+}
+
+Body* VEPolyline::get_first()
+{
+    return first;
+}
+
+Body* VEPolyline::get_end()
+{
+    return end;
+}
+
+void VEPolyline::set_description(QString text)
+{
+    description = text;
+}
+
+QString VEPolyline::get_description()
+{
+    return description;
 }
 
 int VEPolyline::type() const
@@ -42,27 +88,6 @@ void VEPolyline::setPreviousPosition(const QPointF previousPosition)
 void VEPolyline::setPath(const QPainterPath &path)
 {
     QGraphicsPathItem::setPath(path);
-}
-
-void VEPolyline::SetId(int &nextPolylineId)
-{
-    polylineId = nextPolylineId++;
-}
-
-void VEPolyline::SetDescription(QString text)
-{
-    description = text;
-}
-
-QString VEPolyline::GetDescription()
-{
-    return description;
-}
-
-void VEPolyline::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    emit polylineIsSelected(polylineId);
-    QGraphicsItem::mousePressEvent(event);
 }
 
 void VEPolyline::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -206,7 +231,6 @@ void VEPolyline::updateDots()
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         QPointF point = linePath.elementAt(i);
-
         DotSignal *dot = new DotSignal(point, this);
         connect(dot, &DotSignal::signalMove, this, &VEPolyline::slotMove);
         connect(dot, &DotSignal::signalMouseRelease, this, &VEPolyline::checkForDeletePoints);
@@ -214,3 +238,4 @@ void VEPolyline::updateDots()
         listDotes.append(dot);
     }
 }
+

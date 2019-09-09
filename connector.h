@@ -8,69 +8,132 @@
 #include <QDebug>
 #include <QCursor>
 
-///Класс описания коннектора
+
+/**
+ * Класс для описания коннектора
+ */
+
 class Connector : public QObject, public QGraphicsItem
 {
 public:
-    Connector(Qt::GlobalColor color); /// установка стандртного цвета и флага
-    ~Connector(); /// деструктор класса
+    Connector(Qt::GlobalColor color);// инициализация стандартного цвета и флага.
+    ~Connector() override;
 
-    int connectorId; /// личное ID коннектора
-    int equipmentId; /// ID оборудование
+    // инициализация типа объекта
     enum {
-        Type = UserType + 10
-    };/// Инициализация типа объекта, для распознавания объектов на сцене
-    int type() const override; /// возвращение типа объекта
-    bool IsNull(); /// проверка на NULL указатель, проверка на сущестовавание связи
+        Type = UserType + 12
+    };
+    int type() const override;// возвращает тип объекта
 
-public:
-    Qt::GlobalColor GetColor(); /// возвращение цвета коннектора
-    void SetLink(Connector *connector); ///установление связи между коннекторами
-    Connector* GetLink(); /// возвращение указателя на коннектор, связанный с выбранным коннектором
+    Qt::GlobalColor get_color();// возвращает тип коннектора
+    void set_link(Connector *connector);// утанавливает связь с другим коннектором
+    Connector* get_link();// возвращает соединенный коннектор
+    void set_connectorId(int id);// утанавливает id
+    int get_connectorId();// возвращает id
+    void set_equipmentId(int id);// устанавливает id оборудования
+    int get_equipmentId();// возвращает id оборудования
+    void set_description(QString text);// устанавливает описание
+    QString get_description();// возвращает описание
+    void set_name(QString text);// устанавливает название
+    QString get_name();// возвращает название
+
+    static Connector* set_color(Qt::GlobalColor color);// устанавливает тип коннектора
+    static bool contains(const QVector <Connector*> &connectors, Qt::GlobalColor color);// проверка на наличие данного типа коннектора
 
 private:
-    Qt::GlobalColor color; //цвет коннектора
-    Connector *link; //указатель на связанный коннектор
-    /* Данные методы виртуальные, поэтому их необходимо реализовать
-     * в случае наследования от QGraphicsItem
-     * */
-    QRectF boundingRect() const; //рабочая область
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget); //рисование коннектора
+    Qt::GlobalColor color;// тип коннектора
+    QString name = nullptr;
+    Connector *link;// связанный коннектор
+    int connectorId;
+    int equipmentId ;
+    QString description = nullptr;
+    QRectF boundingRect() const override;// рабочая область (квадрат)
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;// отрисовка коннектора
 };
 
-/// Класс USB
+//классы в соответствии с типами отвечают за создание коннекторов
 class ConnectorRed : public Connector
 {
 public:
     ConnectorRed();
 };
 
-/// Класс HDMI
+class ConnectorDarkRed : public Connector
+{
+public:
+    ConnectorDarkRed();
+};
+
 class ConnectorBlue : public Connector
 {
 public:
     ConnectorBlue();
 };
 
-/// Класс VGA
+class ConnectorDarkBlue : public Connector
+{
+public:
+    ConnectorDarkBlue();
+};
+
 class ConnectorGreen : public Connector
 {
 public:
     ConnectorGreen();
 };
 
-/// Класс ethernet
+class ConnectorDarkGreen : public Connector
+{
+public:
+    ConnectorDarkGreen();
+};
+
 class ConnectorCyan : public Connector
 {
 public:
     ConnectorCyan();
 };
 
-/// Класс Mini jack 3.5 mm
+class ConnectorDarkCyan : public Connector
+{
+public:
+    ConnectorDarkCyan();
+};
+
 class ConnectorYellow : public Connector
 {
 public:
     ConnectorYellow();
+};
+
+class ConnectorDarkYellow : public Connector
+{
+public:
+    ConnectorDarkYellow();
+};
+
+class ConnectorGray : public Connector
+{
+public:
+    ConnectorGray();
+};
+
+class ConnectorDarkGray : public Connector
+{
+public:
+    ConnectorDarkGray();
+};
+
+class ConnectorMagenta : public Connector
+{
+public:
+    ConnectorMagenta();
+};
+
+class ConnectorDarkMagenta : public Connector
+{
+public:
+    ConnectorDarkMagenta();
 };
 
 #endif // CONNECTOR_H

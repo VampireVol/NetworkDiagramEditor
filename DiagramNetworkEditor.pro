@@ -25,17 +25,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        adddescription.cpp \
-        addequipment.cpp \
         addrule.cpp \
         body.cpp \
         connectionrule.cpp \
         connector.cpp \
+        connectorcreator.cpp \
         dotsignal.cpp \
         equipment.cpp \
         equipmentcreator.cpp \
         equipmentrender.cpp \
-        fileorganizer.cpp \
+        filemanager.cpp \
+        instruction.cpp \
+        library.cpp \
         main.cpp \
         mainwindow.cpp \
         projectname.cpp \
@@ -43,27 +44,29 @@ SOURCES += \
         vepolyline.cpp
 
 HEADERS += \
-        adddescription.h \
-        addequipment.h \
         addrule.h \
         body.h \
         connectionrule.h \
         connector.h \
+        connectorcreator.h \
         dotsignal.h \
         equipment.h \
         equipmentcreator.h \
         equipmentrender.h \
-        fileorganizer.h \
+        filemanager.h \
+        instruction.h \
+        library.h \
         mainwindow.h \
         projectname.h \
         selectpath.h \
         vepolyline.h
 
 FORMS += \
-        adddescription.ui \
-        addequipment.ui \
         addrule.ui \
+        connectorcreator.ui \
         equipmentcreator.ui \
+        instruction.ui \
+        library.ui \
         mainwindow.ui \
         projectname.ui \
         selectpath.ui
@@ -78,13 +81,29 @@ RESOURCES += \
 
 DISTFILES += \
     img/add.png \
+    img/connectors/blue.png \
+    img/connectors/cyan.png \
+    img/connectors/darkblue.png \
+    img/connectors/darkcyan.png \
+    img/connectors/darkgray.png \
+    img/connectors/darkgreen.png \
+    img/connectors/darkmagenta.png \
+    img/connectors/darkred.png \
+    img/connectors/darkyellow.png \
+    img/connectors/gray.png \
+    img/connectors/green.png \
+    img/connectors/magenta.png \
+    img/connectors/red.png \
+    img/connectors/yellow.png \
+    img/create equip.png \
     img/create equip.png \
     img/create new.png \
-    img/edit.png \
+    img/create new.png \
     img/exit.png \
     img/icon_application.png \
     img/open.png \
     img/red_out.png \
+    img/save as.png \
     img/save as.png \
     img/save.png \
     img/yellow_out.png

@@ -6,19 +6,19 @@ Body::Body(int size)
     setFlag(ItemIsSelectable);
 }
 
-Body::~Body()
-{
-
-}
-
 int Body::type() const
 {
     return Type;
 }
 
-void Body::setId(int id)
+void Body::set_id(int id)
 {
     this->id = id;
+}
+
+int Body::get_id()
+{
+    return id;
 }
 
 QRectF Body::boundingRect() const
@@ -30,7 +30,7 @@ void Body::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 {
     QPen pen;
     pen.setColor(Qt::black);
-    pen.setWidth(isSelected() ? 4 : 2);
+    pen.setWidth(QGraphicsItem::isSelected() ? 4 : 2);
     painter->setPen(pen);
     painter->setBrush(Qt::white);
     painter->drawRect(0,0,80,height);
@@ -40,12 +40,6 @@ void Body::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Body::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    /* Устанавливаем позицию графического элемента
-     * в графической сцене, транслировав координаты
-     * курсора внутри графического элемента
-     * в координатную систему графической сцены
-     * */
-
     this->setPos(mapToScene(event->pos() + m_shiftMouseCoords));
     auto dx = event->pos().x() - m_previousPosition.x();
     auto dy = event->pos().y() - m_previousPosition.y();
@@ -54,22 +48,16 @@ void Body::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Body::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    /* При нажатии мышью на графический элемент
-     * заменяем курсор на руку, которая держит этот элемента
-     * */
-    emit equipmentIsSelected(id);
     m_shiftMouseCoords = this->pos() - mapToScene(event->pos());
     this->setCursor(QCursor(Qt::ClosedHandCursor));
     m_previousPosition = event->pos();
+    qDebug() << "234";
     Q_UNUSED(event);
     QGraphicsItem::mousePressEvent(event);
 }
 
 void Body::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    /* При отпускании мышью элемента
-     * заменяем на обычный курсор стрелку
-     * */
     this->setCursor(QCursor(Qt::ArrowCursor));
     Q_UNUSED(event);
 }

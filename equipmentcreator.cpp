@@ -3,27 +3,137 @@
 #include <QMessageBox>
 #include <QRegExpValidator>
 
-EquipmentCreator::EquipmentCreator(QWidget *parent) :
+EquipmentCreator::EquipmentCreator(const QVector<Connector*> &connectors_in_project, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::EquipmentCreator)
+    ui(new Ui::EquipmentCreator),
+    connectors_in_project(connectors_in_project)
 {
     ui->setupUi(this);
-    QListWidgetItem *itemRed = new QListWidgetItem(QIcon(":/img/red_out.png"), "USB");
-    ui->listWidgetConnectors->addItem(itemRed);
-    QListWidgetItem *itemBlue = new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI");
-    ui->listWidgetConnectors->addItem(itemBlue);
-    QListWidgetItem *itemGreen = new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA");
-    ui->listWidgetConnectors->addItem(itemGreen);
-    QListWidgetItem *itemCyan = new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet");
-    ui->listWidgetConnectors->addItem(itemCyan);
-    QListWidgetItem *itemYellow = new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm");
-    ui->listWidgetConnectors->addItem(itemYellow);
 
-    QRegExp exp("[a-zA-Z]{1,9}[1-9]{0,2}");
-    ui->lineEditName->setValidator(new QRegExpValidator(exp, this));
+    foreach(Connector *connector, this->connectors_in_project)
+    {
+        switch(connector->get_color())
+        {
+        case Qt::red:
+        {
+            if(Connector::contains(connectors_in_project, Qt::red))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/red.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkRed:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkRed))
+            {
+               ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkred.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::blue:
+        {
+            if(Connector::contains(connectors_in_project, Qt::blue))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/blue.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkBlue:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkBlue))
+            {
+               ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkblue.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::cyan:
+        {
+            if(Connector::contains(connectors_in_project, Qt::cyan))
+            {
 
-    listWidgetEquipment_isEmpty = true;
-    equipmentName_isGood = false;
+               ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/cyan.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkCyan:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkCyan))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkcyan.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::green:
+        {
+            if(Connector::contains(connectors_in_project, Qt::green))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/green.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkGreen:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkGreen))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgreen.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::yellow:
+        {
+            if(Connector::contains(connectors_in_project, Qt::yellow))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/yellow.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkYellow:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkYellow))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkyellow.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::gray:
+        {
+            if(Connector::contains(connectors_in_project, Qt::gray))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/gray.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkGray:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkGray))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgray.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::magenta:
+        {
+            if(Connector::contains(connectors_in_project, Qt::magenta))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/magenta.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkMagenta:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkMagenta))
+            {
+                ui->listWidgetConnectors->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkmagenta.png"), connector->get_name()));
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+    }
+
     ui->pushButtonAdd->setEnabled(false);
     ui->pushButtonDel->setEnabled(false);
     ui->pushButtonCreate->setEnabled(false);
@@ -41,37 +151,22 @@ Equipment* EquipmentCreator::CreateEquipment()
 
 void EquipmentCreator::on_pushButtonCreate_clicked()
 {
-//записываем XML файл
     QVector <Connector*> connectors;
-    QString str;
 
     while (QListWidgetItem *item = ui->listWidgetEquipment->takeItem(0))
     {
-        str = item->text();
-        if(str == "USB")
+        foreach(Connector *connector, connectors_in_project)
         {
-            connectors.push_back(new ConnectorRed());
-        }
-        else if (str == "HDMI")
-        {
-            connectors.push_back(new ConnectorBlue());
-        }
-        else if (str == "VGA")
-        {
-            connectors.push_back(new ConnectorGreen());
-        }
-        else if (str == "Internet")
-        {
-            connectors.push_back(new ConnectorCyan());
-        }
-        else if (str == "Mini jack 3.5 mm")
-        {
-            connectors.push_back(new ConnectorYellow());
+            if(item->text() == connector->get_name())
+            {
+                connectors.push_back(Connector::set_color(connector->get_color()));
+                connectors.last()->set_name(item->text());
+            }
         }
     }
     QString name = ui->lineEditName->text();
     equipment = new Equipment(connectors);
-    equipment->name = name;
+    equipment->set_name(name);
 
     EquipmentCreator::close();
 }
@@ -124,13 +219,12 @@ void EquipmentCreator::on_pushButtonExit_clicked()
 
 void EquipmentCreator::on_lineEditName_textChanged()
 {
-    equipmentName_isGood = ui->lineEditName->hasAcceptableInput();
     enable_pushButtonCreate();
 }
 
 void EquipmentCreator::enable_pushButtonCreate()
 {
-    if(!listWidgetEquipment_isEmpty && equipmentName_isGood)
+    if(!listWidgetEquipment_isEmpty && !ui->lineEditName->text().isEmpty())
         ui->pushButtonCreate->setEnabled(true);
     else {
         ui->pushButtonCreate->setEnabled(false);

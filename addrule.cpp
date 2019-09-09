@@ -2,26 +2,155 @@
 #include "ui_addrule.h"
 #include "QDebug"
 
-AddRule::AddRule(QWidget *parent) :
+AddRule::AddRule(const QVector<Connector*> &connectors_in_project, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AddRule)
+    ui(new Ui::AddRule),
+    connectors_in_project(connectors_in_project)
 {
     ui->setupUi(this);
     ui->allow->setEnabled(false);
     ui->ban->setEnabled(false);
-    reject = false;
+
     listWidget_1_clicked = false;
     listWidget_2_clicked = false;
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "USB"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/red_out.png"), "USB"));
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/blue_out.png"), "HDMI"));
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/green_out.png"), "VGA"));
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/cyan_out.png"), "Internet"));
-    ui->listWidget->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm"));
-    ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/img/yellow_out.png"), "Mini jack 3.5 mm"));
+
+    foreach(Connector *connector, this->connectors_in_project)
+    {
+        switch(connector->get_color())
+        {
+        case Qt::red:
+        {
+            if(Connector::contains(connectors_in_project, Qt::red))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/red.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/red.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkRed:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkRed))
+            {
+               ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkred.png"), connector->get_name()));
+               ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkred.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::blue:
+        {
+            if(Connector::contains(connectors_in_project, Qt::blue))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/blue.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/blue.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkBlue:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkBlue))
+            {
+               ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkblue.png"), connector->get_name()));
+               ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkblue.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::cyan:
+        {
+            if(Connector::contains(connectors_in_project, Qt::cyan))
+            {
+
+               ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/cyan.png"), connector->get_name()));
+               ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/cyan.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkCyan:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkCyan))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkcyan.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkcyan.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::green:
+        {
+            if(Connector::contains(connectors_in_project, Qt::green))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/green.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/green.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkGreen:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkGreen))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgreen.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgreen.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::yellow:
+        {
+            if(Connector::contains(connectors_in_project, Qt::yellow))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/yellow.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/yellow.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkYellow:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkYellow))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkyellow.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkyellow.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::gray:
+        {
+            if(Connector::contains(connectors_in_project, Qt::gray))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/gray.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/gray.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkGray:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkGray))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgray.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkgray.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::magenta:
+        {
+            if(Connector::contains(connectors_in_project, Qt::magenta))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/magenta.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/magenta.png"), connector->get_name()));
+            }
+            break;
+        }
+        case Qt::darkMagenta:
+        {
+            if(Connector::contains(connectors_in_project, Qt::darkMagenta))
+            {
+                ui->listWidget->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkmagenta.png"), connector->get_name()));
+                ui->listWidget_2->addItem(new QListWidgetItem(QIcon(":/rec/img/connectors/darkmagenta.png"), connector->get_name()));
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+    }
 }
 
 AddRule::~AddRule()
@@ -37,7 +166,7 @@ void AddRule::on_listWidget_itemClicked()
         ui->allow->setEnabled(true);
         ui->ban->setEnabled(true);
     }
-    color1 = ui->listWidget->currentItem()->text();
+    color1_text = ui->listWidget->currentItem()->text();
 }
 
 void AddRule::on_listWidget_2_itemClicked()
@@ -48,66 +177,31 @@ void AddRule::on_listWidget_2_itemClicked()
         ui->allow->setEnabled(true);
         ui->ban->setEnabled(true);
     }
-    color2 = ui->listWidget_2->currentItem()->text();
+    color2_text = ui->listWidget_2->currentItem()->text();
 }
 
-void AddRule::addRule()
+void AddRule::add_rule()
 {
-    if(color1 == "USB")
+    foreach(Connector *connector, connectors_in_project)
     {
-        color_1 = Qt::red;
+        if(color1_text == connector->get_name())
+            color1 = connector->get_color();
+        if(color2_text == connector->get_name())
+            color2 = connector->get_color();
     }
-    else if (color1 == "HDMI")
-    {
-        color_1 = Qt::blue;
-    }
-    else if (color1 == "VGA")
-    {
-        color_1 = Qt::green;
-    }
-    else if (color1 == "Internet")
-    {
-        color_1 = Qt::cyan;
-    }
-    else if (color1 == "Mini jack 3.5 mm")
-    {
-        color_1 = Qt::yellow;
-    }
-
-    if(color2 == "USB")
-    {
-        color_2 = Qt::red;
-    }
-    else if (color2 == "HDMI")
-    {
-        color_2 = Qt::blue;
-    }
-    else if (color2 == "VGA")
-    {
-        color_2 = Qt::green;
-    }
-    else if (color2 == "Internet")
-    {
-        color_2 = Qt::cyan;
-    }
-    else if (color2 == "Mini jack 3.5 mm")
-    {
-        color_2 = Qt::yellow;
-    }
-
 }
 
-Qt::GlobalColor AddRule::getColor_1()
+Qt::GlobalColor AddRule::get_color1()
 {
-    return color_1;
+    return color1;
 }
 
-Qt::GlobalColor AddRule::getColor_2()
+Qt::GlobalColor AddRule::get_color2()
 {
-    return color_2;
+    return color2;
 }
 
-bool AddRule::getRule()
+bool AddRule::get_rule()
 {
     return rule;
 }
@@ -126,13 +220,13 @@ void AddRule::on_reject_clicked()
 void AddRule::on_allow_clicked()
 {
     rule = true;
-    addRule();
+    add_rule();
     AddRule::close();
 }
 
 void AddRule::on_ban_clicked()
 {
     rule = false;
-    addRule();
+    add_rule();
     AddRule::close();
 }

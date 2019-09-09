@@ -8,38 +8,44 @@
 #include <QDebug>
 #include <QCursor>
 
-
-/// Тело оборудования
+/**
+ * Класс предназначен для работы с "телом" оборудования
+ * В классе происходит инициализация всех необходимых данных для работы с "телом" оборудования.
+ * Инициализируется количество пар слотов (портов коннекторов) в высоту, высота в пикселях, id оборудования.
+ * Также в классе происходит обработка событий перемещения тела, нажатия (отжатия) левой кнопки мыши по телу объекта, координат предшевствующего положения мыши.
+ * Для коммуникации между объектами в классе присутвуют 2 сигнала: сигнал выбора тела, сигнал движения тела.
+ */
 
 class Body  : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    Body(int size); /// Установление стандартного размера оборудования, установление флага "Выделение объекта"
-    ~Body(); /// деструктор класса
+    Body(int size);// инициализируются размеры и устанавлвается флаг
 
 public:
-    void setId(int id); /// Установление ID equipment (оборудования)
+    // инициализация типа объекта
     enum {
         Type = UserType + 11
-    }; /// Инициализация типа объекта, для распознавания объектов на сцене
-    int type() const override; /// возвращение типа объекта
+    };
+    int type() const override;// возвращает тип объекта
+
+    void set_id(int id);// устанавливает id объекта
+    int get_id();// вохвращает id объекта
 
 private:
-    int size; // кол-во пар слотов в высоту
-    int height; // высота в пикселях
-    int id; // id оборудования
-    QPointF m_shiftMouseCoords; // координаты точки нажатия по body
-    QRectF boundingRect() const; // рабочая область (в виде прямоугольника)
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget); // рисование тела оборудования
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);// действия при перемещении тела
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);// действия при нажатии на тела
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event); // действия при отпускании кнопки мыши
-    QPointF m_previousPosition; // координаты предшевствующего положения мыши
+    int id;
+    int size;// количество пар слотов в высоту
+    int height;// высота в пикселях
+    QPointF m_shiftMouseCoords;// координаты точки нажатия по body
+    QRectF boundingRect() const override;// рабочая область (в виде прямоугольника)
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;// отрисовка тела оборудования
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;// реакция на перемещение тела
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;// реакция на нажатие на тело
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;// реакция на отпускание кнопки мыши
+    QPointF m_previousPosition;// координаты предшевствующего положения мыши
 
 signals:
-    void equipmentIsSelected(int equipmentId); // отправление сигнала, когда предмет выбран
-    void signalMove(QGraphicsItem *signalOwner, qreal dx, qreal dy); //отправления сигнала, когда предмет движется
+    void signalMove(QGraphicsItem *signalOwner, qreal dx, qreal dy);
 };
 
 #endif // BODY_H

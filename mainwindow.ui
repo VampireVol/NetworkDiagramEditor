@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>723</width>
-    <height>423</height>
+    <width>849</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
-    <normaloff>:/img/icon_application.png</normaloff>:/img/icon_application.png</iconset>
+    <normaloff>:/rec/img/icon_application.png</normaloff>:/rec/img/icon_application.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
@@ -46,7 +46,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="listWidget"/>
+            <widget class="QListWidget" name="widget_equipments"/>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -55,16 +55,16 @@
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
-                  <widget class="QPushButton" name="pushAddDescription">
+                  <widget class="QPushButton" name="button_add_equipment">
                    <property name="text">
-                    <string>Добавить описание</string>
+                    <string>Добавить объект</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushAddEquipment">
+                  <widget class="QPushButton" name="button_change_description">
                    <property name="text">
-                    <string>Добавить объект</string>
+                    <string>Изменить описание</string>
                    </property>
                   </widget>
                  </item>
@@ -73,14 +73,14 @@
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout">
                  <item>
-                  <widget class="QPushButton" name="pushAddConn">
+                  <widget class="QPushButton" name="button_add_connection">
                    <property name="text">
                     <string>Создать связь</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushDeleteObj">
+                  <widget class="QPushButton" name="button_delete_object">
                    <property name="text">
                     <string>Удалить объект</string>
                    </property>
@@ -132,32 +132,40 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>723</width>
-     <height>21</height>
+     <width>849</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="create"/>
-    <addaction name="open"/>
+    <addaction name="create_project"/>
+    <addaction name="open_project"/>
     <addaction name="separator"/>
-    <addaction name="save"/>
+    <addaction name="save_project"/>
     <addaction name="separator"/>
-    <addaction name="save_as"/>
-    <addaction name="close"/>
+    <addaction name="save_as_project"/>
+    <addaction name="close_project"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Оборудование</string>
     </property>
-    <addaction name="open_equipment_creator"/>
-    <addaction name="add_delete_equipment"/>
-    <addaction name="add_connection"/>
+    <addaction name="open_equipmentCreator"/>
+    <addaction name="open_connectorCreator"/>
+    <addaction name="open_library"/>
+    <addaction name="add_rule"/>
+   </widget>
+   <widget class="QMenu" name="help">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="instruction"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
+   <addaction name="help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -166,89 +174,109 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="create"/>
-   <addaction name="open"/>
-   <addaction name="save"/>
-   <addaction name="save_as"/>
-   <addaction name="open_equipment_creator"/>
-   <addaction name="add_delete_equipment"/>
-   <addaction name="add_connection"/>
-   <addaction name="close"/>
+   <addaction name="create_project"/>
+   <addaction name="open_project"/>
+   <addaction name="save_project"/>
+   <addaction name="save_as_project"/>
+   <addaction name="open_equipmentCreator"/>
+   <addaction name="open_connectorCreator"/>
+   <addaction name="open_library"/>
+   <addaction name="add_rule"/>
+   <addaction name="instruction"/>
+   <addaction name="close_project"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="create">
+  <action name="create_project">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/create new.png</normaloff>:/img/create new.png</iconset>
+     <normaloff>:/rec/img/create new.png</normaloff>:/rec/img/create new.png</iconset>
    </property>
    <property name="text">
     <string>Создать проект</string>
    </property>
   </action>
-  <action name="open">
+  <action name="open_project">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/open.png</normaloff>:/img/open.png</iconset>
+     <normaloff>:/rec/img/open.png</normaloff>:/rec/img/open.png</iconset>
    </property>
    <property name="text">
     <string>Открыть проект</string>
    </property>
   </action>
-  <action name="save">
+  <action name="save_project">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/save.png</normaloff>:/img/save.png</iconset>
+     <normaloff>:/rec/img/save.png</normaloff>:/rec/img/save.png</iconset>
    </property>
    <property name="text">
     <string>Сохранить</string>
    </property>
   </action>
-  <action name="close">
+  <action name="close_project">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/exit.png</normaloff>:/img/exit.png</iconset>
+     <normaloff>:/rec/img/exit.png</normaloff>:/rec/img/exit.png</iconset>
    </property>
    <property name="text">
     <string>Выйти</string>
    </property>
   </action>
-  <action name="open_equipment_creator">
+  <action name="open_equipmentCreator">
    <property name="checkable">
     <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/create equip.png</normaloff>:/img/create equip.png</iconset>
+     <normaloff>:/rec/img/equipment.png</normaloff>:/rec/img/equipment.png</iconset>
    </property>
    <property name="text">
     <string>Создать оборудование</string>
    </property>
   </action>
-  <action name="add_delete_equipment">
+  <action name="open_library">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/add.png</normaloff>:/img/add.png</iconset>
+     <normaloff>:/rec/img/add.png</normaloff>:/rec/img/add.png</iconset>
    </property>
    <property name="text">
     <string>Открыть библиотеку</string>
    </property>
   </action>
-  <action name="save_as">
+  <action name="save_as_project">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/save as.png</normaloff>:/img/save as.png</iconset>
+     <normaloff>:/rec/img/save as.png</normaloff>:/rec/img/save as.png</iconset>
    </property>
    <property name="text">
     <string>Сохранить как</string>
    </property>
   </action>
-  <action name="add_connection">
+  <action name="add_rule">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/img/add_conn.png</normaloff>:/img/add_conn.png</iconset>
+     <normaloff>:/rec/img/connection.png</normaloff>:/rec/img/connection.png</iconset>
    </property>
    <property name="text">
     <string>Добавить соединение</string>
+   </property>
+  </action>
+  <action name="open_connectorCreator">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/connector.png</normaloff>:/rec/img/connector.png</iconset>
+   </property>
+   <property name="text">
+    <string>Создать коннектор</string>
+   </property>
+  </action>
+  <action name="instruction">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/rec/img/help.png</normaloff>:/rec/img/help.png</iconset>
+   </property>
+   <property name="text">
+    <string>Инструкция</string>
    </property>
   </action>
  </widget>

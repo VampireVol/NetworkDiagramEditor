@@ -4,41 +4,62 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 
-/// Класс, описывающий вершины ломанной
+class QGraphicsSceneHoverEventPrivate;
+class QGraphicsSceneMouseEvent;
+
+/**
+ * Класс описывает вершины ломанной
+ *
+ * При создании класса происходит создание вершины со стандартными параметрами.
+ * Класс работает с флагами состояний и сигналами, позволяющими двигать объект согласовано с другими объектами.
+ */
+
 class DotSignal : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
-    Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged) ///Макрос Q_PROPERTY необходим для того, чтобы  иметь возможность создавать класс со свойствами, поддерживаемыми метаобъектной подсистемой Qt.
+    Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit DotSignal(QGraphicsItem *parentItem = 0, QObject *parent = 0); /// создание вершины ломанной
-    explicit DotSignal(QPointF pos, QGraphicsItem *parentItem = 0, QObject *parent = 0); /// создание вершины ломанной с определенной позицией
-    ~DotSignal(); /// деструктор класса
+    /*
+     * DotSignal - создание вершины ломанной
+     * parentItem - родительский предмет
+     * parent - объект
+     */
+    explicit DotSignal(QGraphicsItem *parentItem = nullptr, QObject *parent = nullptr);
+    /*
+     * DotSignal - создание вершины ломанной с определенной позицией
+     * pos - позиция
+     * parentItem - родительский предмет
+     * parent - объект
+     */
+    explicit DotSignal(QPointF pos, QGraphicsItem *parentItem = nullptr, QObject *parent = nullptr);
+    ~DotSignal() override;
+
+    // стандартный флаг, позволяющий двигать объекты
     enum Flags {
         Movable = 0x01
-    }; /// стандартный флаг возможности двигать
+    };
 
-    QPointF previousPosition() const; /// возвращение предыдущей позиции
-    void setPreviousPosition(const QPointF previousPosition); /// установка предыдущей позиции
+    QPointF previousPosition() const;// возвращает предыдущую позицию
+    void setPreviousPosition(const QPointF previousPosition);// устанавливает предыдущую позицию
 
-    void setDotFlags(unsigned int flags); /// установка флагов
+    void setDotFlags(unsigned int flags);// устанавливает флаги
 
 signals:
-    void previousPositionChanged(); /// сигнал, вызываемый при изменении позиции
-    void signalMouseRelease(); /// сигнал, вызываемый при отпускании кнопки мыши
-    void signalMove(QGraphicsItem *signalOwner, qreal dx, qreal dy); /// отправления сигнала, когда предмет движется
+    void previousPositionChanged();// сигнал при изменении позиции
+    void signalMouseRelease();// сигнал при отпускании кнопки мыши
+    void signalMove(QGraphicsItem *signalOwner, qreal dx, qreal dy);// сигнал при перемещении
 
 protected:
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override; /// действия при движении мыши
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override; /// действия при нажатии кнопки мыши
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override; /// действия при отпускании кнопки мыши
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event); /// дейсвтия при наведении курсора мыши на объект
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event); ///действия при выходе курсора из рабочей области объекта
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;// действия при перемещении
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;// действия при нажатии
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;// действия при отпускании
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event ) override;// дейсвтия при наведении курсора
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;// действия при выходе курсора из рабочей области
 
-public slots:
 private:
-    unsigned int m_flags; // флаги вершины
-    QPointF m_previousPosition; // координаты предыдущей позиции
+    unsigned int m_flags;
+    QPointF m_previousPosition;
 };
 
 #endif // DOTSIGNAL_H

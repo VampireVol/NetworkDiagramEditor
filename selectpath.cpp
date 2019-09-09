@@ -51,6 +51,7 @@ void SelectPath::on_buttonBox_accepted()
 
 void SelectPath::on_buttonBox_rejected()
 {
+    projectPath.clear();
     SelectPath::close();
 }
 
@@ -60,7 +61,7 @@ void SelectPath::on_listView_clicked(const QModelIndex &index)
     current = index;
 }
 
-QString SelectPath::getProjectPath()
+QString SelectPath::get_projectPath()
 {
     return projectPath;
 }

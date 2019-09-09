@@ -2,48 +2,52 @@
 #define ADDRULE_H
 
 #include <QDialog>
+#include "connector.h"
+
+// Класс для создания правил соединения коннекторов
 
 namespace Ui {
 class AddRule;
 }
 
+/**
+ * Класс служит для добавления правил соединения
+ * Пользователь может добавить правила соединения: устанавить разрешающее правило или запрещающее правило.
+ */
 
-/// Класс для добавления правил соединения
 class AddRule : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AddRule(QWidget *parent = nullptr); /// добавление видов коннекторов в List Widget's
-    ~AddRule(); /// деструктор класса, удаление ui (using interface)
+    //добавление видов коннекторов в List Widget's. Происходит обработка List Widget's на выбор коннектора.
+    explicit AddRule(const QVector<Connector*> &connectors_in_project, QWidget *parent = nullptr);
+    ~AddRule();
 
 public:
-    Qt::GlobalColor getColor_1(); /// возвращение выбранного вида коннекторов из List Widget
-    Qt::GlobalColor getColor_2(); /// возвращение выбранного вида коннекторов из List Widget
-    bool getRule(); /// возврат правила возможности соединения
-    bool isReject(); /// проверка на нажатие кнопки "Отмена"
+    Qt::GlobalColor get_color1();// Возвращает тип первого коннекора
+    Qt::GlobalColor get_color2();// Возвращает тип второго коннекора
+    bool get_rule();// Возвращает правило
+    bool isReject();// Проверка на нажание "отмена"
 private slots:
-    void on_listWidget_itemClicked(); // действия при нажатии на объект из виджета_1
-
-    void on_listWidget_2_itemClicked(); //действия при нажатии на объект из виджета_2
-
-    void addRule(); //добавление правила
-
-    void on_reject_clicked(); // действия при нажатии кнопки "Отмена"
-
-    void on_allow_clicked(); // установление разрешающего правила
-    void on_ban_clicked(); // установление запрещающего правила
+    void on_listWidget_itemClicked();// реакция на нажатие первого виджета
+    void on_listWidget_2_itemClicked();// реакция на нажатие второго виджета
+    void add_rule();// добавить правило"
+    void on_reject_clicked();// реакция на нажатие "отмена"
+    void on_allow_clicked();// разрешить соединение
+    void on_ban_clicked();// запертить соединеие
 
 private:
     Ui::AddRule *ui;
     bool listWidget_1_clicked;
     bool listWidget_2_clicked;
-    QString color1;
-    QString color2;
-    bool reject;
-    Qt::GlobalColor color_1;
-    Qt::GlobalColor color_2;
+    QString color1_text;
+    QString color2_text;
+    bool reject = false;
+    Qt::GlobalColor color1;
+    Qt::GlobalColor color2;
     bool rule;
+    const QVector<Connector*> &connectors_in_project;
 };
 
 #endif // ADDRULE_H

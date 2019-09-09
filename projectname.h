@@ -2,34 +2,35 @@
 #define PROJECTNAME_H
 
 #include <QDialog>
-#include "connectionrule.h"
 
 namespace Ui {
 class ProjectName;
 }
 
-/// Класс, отвечающий за ввод названия проекта
+/**
+ * Класс отвечает за ввод названия проекта
+ */
+
 class ProjectName : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ProjectName(QWidget *parent = nullptr); /// Инициализация диалогового окна
-    ~ProjectName(); /// Деструктор класса
+    explicit ProjectName(QWidget *parent = nullptr);
+    ~ProjectName();
 public:
-    QString projectName(); /// возврат названия проекта
+    QString get_projectName();// возвращает название проекта
 
 private slots:
-    void on_buttonBox_accepted();
+    void on_buttonBox_accepted();// принять название
 
-    void on_buttonBox_rejected();
+    void on_buttonBox_rejected();// отмена
 
-    void on_projectName_textChanged();
+    void on_projectName_textChanged();// действия при изменении текста в названии оборудрвания
 
 private:
     Ui::ProjectName *ui;
-    bool projectName_isSelected;
-    ConnectionRule connectionRule;
+    QString projectName = nullptr;
 };
 
 #endif // PROJECTNAME_H

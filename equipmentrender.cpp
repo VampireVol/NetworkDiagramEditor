@@ -17,3 +17,20 @@ EquipmentRender::EquipmentRender(QVector <Connector*> connectors)
         connectors.last()->setPos(60, 20 + (connectors.size() / 2) * 40);
     }
 }
+
+EquipmentRender::~EquipmentRender()
+{
+    foreach(Connector *connector, connectors)
+        delete connector;
+
+    delete body;
+}
+
+Body* EquipmentRender::get_body()
+{
+    return body;
+}
+QVector <Connector*> EquipmentRender::get_connectors()
+{
+    return connectors;
+}
